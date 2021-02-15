@@ -10,6 +10,8 @@
 
 # production
 /build
+/src/components/todo
+/src/api
 
 # misc
 .DS_Store
