@@ -1,13 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 class FooterComponent extends Component {
-    render() {
-        return (
-            <footer className="footer">
-                <span className="text-muted">All Rights Reserved 2018 @in28minutes</span>
-            </footer>
-        )
-    }
+  render() {
+    return (
+      <nav className="navbar fixed-bottom navbar-dark bg-primary">
+        <a className="navbar-brand" href="#">
+          All Rights Reserved 2021 @Cognizant Challenge
+        </a>
+      </nav>
+    );
+  }
 }
 
-export default FooterComponent
+export default FooterComponent;
