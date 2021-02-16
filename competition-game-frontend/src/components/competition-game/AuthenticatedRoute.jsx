@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import AuthenticationService from './services/AuthenticationService.js'
+import AuthenticationService from '../../api/jwt/AuthenticationService.js'
 
 class AuthenticatedRoute extends Component {
     render() {

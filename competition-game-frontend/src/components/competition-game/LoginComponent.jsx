@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AuthenticationService from "./services/AuthenticationService";
+import AuthenticationService from "../../api/jwt/AuthenticationService";
 
 class LoginComponent extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class LoginComponent extends Component {
           this.state.username,
           response.data.token
         );
-        this.props.history.push(`/welcome/${this.state.username}`);
+        this.props.history.push(`/submitchallenge/${this.state.username}`);
       })
       .catch(() => {
         this.setState({ showSuccessMessage: false });

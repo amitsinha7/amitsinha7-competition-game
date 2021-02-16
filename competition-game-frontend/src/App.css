@@ -44,3 +44,12 @@
   height: 40px;
   background-color: #222222;
 }
+
+.CompetitionGameApp {
+  height: 500px;
+  width: 100%;
+}
+
+.outer-container {
+  height: inherit;
+}

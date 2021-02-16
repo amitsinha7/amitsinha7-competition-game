@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import AuthenticationService from "./services/AuthenticationService";
+import AuthenticationService from "../../api/jwt/AuthenticationService";
 
 class HeaderComponent extends Component {
   render() {
@@ -14,7 +14,7 @@ class HeaderComponent extends Component {
               <li>
                 <Link
                   className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/submission"
+                  to="/submitchallenge"
                 >
                   SOLVE
                 </Link>
