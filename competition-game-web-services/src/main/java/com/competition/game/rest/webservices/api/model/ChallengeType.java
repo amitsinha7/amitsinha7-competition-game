@@ -1,4 +1,4 @@
-package com.competition.game.rest.webservices.api.model.dbapi;
+package com.competition.game.rest.webservices.api.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

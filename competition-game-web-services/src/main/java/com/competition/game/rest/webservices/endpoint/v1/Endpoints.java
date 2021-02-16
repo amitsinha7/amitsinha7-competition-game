@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.competition.game.rest.webservices.api.model.dbapi.Challenges;
+import com.competition.game.rest.webservices.api.model.Challenges;
 import com.competition.game.rest.webservices.exception.RecordNotFoundException;
 import com.competition.game.rest.webservices.service.ChallengesService;
 
