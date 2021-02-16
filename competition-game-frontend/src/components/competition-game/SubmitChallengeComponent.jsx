@@ -1,19 +1,29 @@
 import React, { Component } from "react";
 import CompetitionGameService from "../../api/competition-game/CompetitionGameService";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Form, Row, Col, Button, Intro, Panel, Results } from "react-bootstrap";
+
+const questionsMap = [0, 1, 2, 3];
+
 class SubmitChallengeComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       challenges: [],
+      challenge: "",
       name: "",
       id: "",
       notes: "",
+      questions: ["question1", "question2", "question3", "question4"],
+      answers: ["answers1", "answers2", "answers3", "answers4"],
     };
     this.showChallenges = this.showChallenges.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
+  onSelect(value) {
+    /* Some code for when buttons are clicked */
+  }
   componentDidMount() {
     // get all entities - GET
   }
@@ -52,45 +62,15 @@ class SubmitChallengeComponent extends Component {
   }
 
   render() {
-    return (
-      <div className="container outer-container">
-        <form className="outer-container">
-          <div className="form-group outer-container" fxLayout="column">
-            <div fxLayout="row" fxLayoutGap="20px">
-              <div className="col-sm-2 col-form-label" fxFlex="20">Name: </div>
-              <div className="col-sm-7" fxFlex="80">
-                <input
-                  className="form-control"
-                  type="text"
-                  name="username"
-                  value={this.state.name}
-                  onChange={this.handleChange}
-                />
-              </div>
-            </div>
+    const elements = ["one", "two", "three"];
 
-            <form class="form-inline">
-              <label class="my-1 mr-2" for="inlineFormCustomSelectPref">
-                SELECT TASK
-              </label>
-              <select
-                class="custom-select my-1 mr-sm-2"
-                id="inlineFormCustomSelectPref"
-              >
-                <option selected>Choose...</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-              </select>
+    const items = [];
 
-              <button type="submit" class="btn btn-primary my-1">
-                Submit
-              </button>
-            </form>
-          </div>
-        </form>
-      </div>
-    );
+    for (const [index, value] of elements.entries()) {
+      items.push(<li key={index}>{value}</li>);
+    }
+
+    return <div>{items}</div>;
   }
 }
 
