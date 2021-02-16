@@ -33,10 +33,10 @@ public class Challenges implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@NotEmpty(message = "Test input is required")
-	private String input;
+	@NotEmpty(message = "Challenge Description is required")
+	private String description;
 
-	@NotEmpty(message = "Task name is required")
-	private TaskName taskName;
+	@NotEmpty(message = "Challenge Name  is required")
+	private String challengeType;
 
 }

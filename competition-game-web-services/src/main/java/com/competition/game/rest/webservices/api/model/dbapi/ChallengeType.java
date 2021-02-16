@@ -2,7 +2,7 @@ package com.competition.game.rest.webservices.api.model.dbapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum TaskName {
+public enum ChallengeType {
 
 	@JsonProperty("Java")
 	JAVA(),
@@ -18,7 +18,5 @@ public enum TaskName {
 
 	@JsonProperty("C")
 	C(),
-	
-	@JsonProperty("Node")
-	NODE_JS()
+
 }
