@@ -31,7 +31,7 @@ class LoginComponent extends Component {
           this.state.username,
           response.data.token
         );
-        this.props.history.push(`/submitchallenge/${this.state.username}`);
+        this.props.history.push(`/challenge/${this.state.username}`);
       })
       .catch(() => {
         this.setState({ showSuccessMessage: false });

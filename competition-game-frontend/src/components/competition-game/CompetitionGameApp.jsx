@@ -6,7 +6,8 @@ import ErrorComponent from './ErrorComponent.jsx'
 import HeaderComponent from './HeaderComponent.jsx'
 import FooterComponent from './FooterComponent.jsx'
 import LogoutComponent from './LogoutComponent.jsx'
-import SubmitChallengeComponent from './SubmitChallengeComponent.jsx'
+import ChallengeComponent from './ChallengeComponent.jsx'
+
 class CompetitionGameApp extends Component {
     render() {
         return (
@@ -18,7 +19,7 @@ class CompetitionGameApp extends Component {
                             <Route path="/" exact component={LoginComponent}/>
                             <Route path="/login" component={LoginComponent}/>
                             <AuthenticatedRoute path="/logout" component={LogoutComponent}/>
-                            <AuthenticatedRoute path="/submitchallenge" component={SubmitChallengeComponent}/>
+                            <AuthenticatedRoute path="/challenge" component={ChallengeComponent}/>
                             <Route component={ErrorComponent}/>
                         </Switch>
                         <FooterComponent/>
