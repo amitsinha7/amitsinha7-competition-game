@@ -9,7 +9,7 @@
 		<version>2.1.8.RELEASE</version>
 		<relativePath />
 	</parent>
-	<groupId>com.competition.game.rest.webservices</groupId>
+	<groupId>com.competition.game.webservices</groupId>
 	<artifactId>competition-game-web-services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>competition game</name>
