@@ -10,7 +10,7 @@
 		<relativePath />
 	</parent>
 	<groupId>com.competition.game.webservices</groupId>
-	<artifactId>competition-game-web-services</artifactId>
+	<artifactId>competition-game-webservices</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>competition game</name>
 	<description>Competition Game Project for Spring Boot</description>

@@ -49,7 +49,7 @@ public class RextesterServiceImpl implements RextesterService {
 		RextesterResponse rextesterResponse = null;
 		HttpStatus httpStatus = HttpStatus.CREATED;
 		try {
-			request.add("LanguageChoice", "1");
+			request.add("LanguageChoice", rextesterReq.getLanguageChoice());
 			request.add("Program", rextesterReq.getProgram());
 			request.add("Input", httpStatus);
 			request.add("CompilerArgs", httpStatus);
@@ -57,7 +57,7 @@ public class RextesterServiceImpl implements RextesterService {
 			HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request,
 					this.createHttpHeaders());
 			String url = "https://rextester.com/rundotnet/api";
-			response = restTemplate.postForObject(url, entity, String.class);
+			rextesterResponse = restTemplate.postForObject(url, entity, RextesterResponse.class);
 
 			Thread.sleep(1000L);
 		} catch (HttpStatusCodeException e) {

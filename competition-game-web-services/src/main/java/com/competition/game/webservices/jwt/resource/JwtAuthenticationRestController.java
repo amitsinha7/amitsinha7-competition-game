@@ -27,7 +27,7 @@ import com.competition.game.webservices.jwt.JwtTokenUtil;
 import com.competition.game.webservices.jwt.JwtUserDetails;
 
 @RestController
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins="${cross.origins}")
 public class JwtAuthenticationRestController {
 
   @Value("${jwt.http.request.header}")
