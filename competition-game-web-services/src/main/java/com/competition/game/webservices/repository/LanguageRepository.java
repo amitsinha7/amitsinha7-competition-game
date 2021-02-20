@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.competition.game.webservices.model.Languages;
+import com.competition.game.webservices.model.Language;
 
 @Repository
-public interface LanguagesRepository extends JpaRepository<Languages, Integer> {
+public interface LanguageRepository extends JpaRepository<Language, Integer> {
 
-	@Query("SELECT u FROM Languages u WHERE u.number = ?1")
-	Optional<Languages> findLanguageByNumber(int languageChoice);
+	@Query("SELECT u FROM Language u WHERE u.number = ?1")
+	Optional<Language> findLanguageByNumber(int languageChoice);
 
 }

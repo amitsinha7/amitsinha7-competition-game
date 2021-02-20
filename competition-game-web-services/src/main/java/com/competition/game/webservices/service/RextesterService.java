@@ -6,9 +6,9 @@ import java.util.concurrent.CompletableFuture;
 import javax.validation.Valid;
 
 import com.competition.game.webservices.api.v1.RextesterRequest;
-import com.competition.game.webservices.api.v1.RextesterResponse;
+import com.competition.game.webservices.model.Rextester;
 
 public interface RextesterService {
-	CompletableFuture<RextesterResponse> submitChallenge(@Valid RextesterRequest rextesterReq)
+	CompletableFuture<Rextester> submitChallenge(@Valid RextesterRequest rextesterReq)
 			throws InterruptedException, IOException;
 }

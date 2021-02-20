@@ -11,35 +11,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.competition.game.webservices.exception.RecordNotFoundException;
-import com.competition.game.webservices.model.Languages;
-import com.competition.game.webservices.repository.LanguagesRepository;
-import com.competition.game.webservices.service.LanguagesService;
+import com.competition.game.webservices.model.Language;
+import com.competition.game.webservices.model.Task;
+import com.competition.game.webservices.repository.LanguageRepository;
+import com.competition.game.webservices.service.LanguageService;
 
 @Service
-public class LanguagesServiceImpl implements LanguagesService {
+public class LanguageServiceImpl implements LanguageService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private LanguagesRepository languagesRepository;
+	private LanguageRepository languagesRepository;
 
 	@Override
-	public List<Languages> getAllLanguages() {
+	public List<Language> getAllLanguages() {
 		logger.debug("getAllEmployees method started");
 
-		List<Languages> challengesList = languagesRepository.findAll();
-		if (challengesList.size() > 0)
-			return challengesList;
+		List<Language> languageList = languagesRepository.findAll();
+		if (languageList.size() > 0)
+			return languageList;
 		else
 			return new ArrayList<>();
 	}
 
 	@Override
-	public Languages findLanguageByNumber(int languageChoice) throws RecordNotFoundException {
+	public Language findLanguageByNumber(int languageChoice) throws RecordNotFoundException {
 
 		logger.debug("validateLanguage method started {}", languageChoice);
 
-		Languages language = languagesRepository.findLanguageByNumber(languageChoice).orElse(null);
+		Language language = languagesRepository.findLanguageByNumber(languageChoice).orElse(null);
 
 		if (nonNull(language))
 			return language;

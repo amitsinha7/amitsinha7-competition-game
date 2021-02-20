@@ -17,9 +17,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.competition.game.webservices.endpoint.v1.ChallengeController;
 import com.competition.game.webservices.exception.CustomExceptionHandler;
-import com.competition.game.webservices.model.Languages;
-import com.competition.game.webservices.repository.LanguagesRepository;
-import com.competition.game.webservices.service.LanguagesService;
+import com.competition.game.webservices.model.Language;
+import com.competition.game.webservices.repository.LanguageRepository;
+import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.RextesterService;
 
 @RunWith(SpringRunner.class)
@@ -28,10 +28,10 @@ import com.competition.game.webservices.service.RextesterService;
 public class CompetitionGameApplicationTests {
 
 	@Autowired
-	private LanguagesService languagesService;
+	private LanguageService languagesService;
 
 	@Autowired
-	private LanguagesRepository languagesRepository;
+	private LanguageRepository languagesRepository;
 
 	@Autowired
 	private RextesterService rextesterService;
@@ -42,7 +42,7 @@ public class CompetitionGameApplicationTests {
 	@Autowired
 	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-	private Languages languages;
+	private Language languages;
 
 	private MockMvc restLanguagesMockMvc;
 
@@ -61,18 +61,17 @@ public class CompetitionGameApplicationTests {
 		this.languages = createEntity();
 	}
 
-	public static Languages createEntity() {
-		Languages employee = new Languages("Custom", 7777);
-		employee.setId(0L);
-		return employee;
+	public static Language createEntity() {
+		Language task = new Language();
+		return task;
 	}
 
 	@Test
 	public void getEmployee() throws Exception {
 		// save
-		Languages lang = languagesRepository.saveAndFlush(languages);
+		Language lang = languagesRepository.saveAndFlush(languages);
 		// fetch the inserted record
-		restLanguagesMockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAllLanguages", lang.getId()))
+		restLanguagesMockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAllLanguages", lang.getName()))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 	}
 }

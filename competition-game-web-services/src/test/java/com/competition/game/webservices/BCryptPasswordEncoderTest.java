@@ -1,4 +1,4 @@
-package com.competition.game.rest.webservices;
+package com.competition.game.webservices;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
