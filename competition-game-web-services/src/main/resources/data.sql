@@ -61,6 +61,18 @@ INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa', 'alexa','alexa@g
 INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa2', 'alexa  ','alexa@yahoo.com');
 INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa1', 'alexa  ','alexa@icloud.com');
 
+INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES
+('','Write a java program to swap two numbers without using third variable','7 9','Before Swap A=7 and B=9
+After Swap A=9 and B=7','1');
+
+INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES
+('','Write a java program to swap two numbers without using third variable','7 9','Before Swap A=7 and B=9
+After Swap A=9 and B=7','2');
+
+INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES
+('','Write a java program to swap two numbers without using third variable','7 9','Before Swap A=7 and B=9
+After Swap A=9 and B=7','4');
+
 
 
 
