@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import AuthenticationService from '../../api/jwt/AuthenticationService.js'
+import ChallengeAPI from '../../api/ChallengeAPI.js'
 
 class AuthenticatedRoute extends Component {
     render() {
-        if (AuthenticationService.isUserLoggedIn()) {
+        if (ChallengeAPI.isUserLoggedIn()) {
             return <Route {...this.props} />
         } else {
             return <Redirect to="/login" />

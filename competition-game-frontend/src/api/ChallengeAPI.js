@@ -1,16 +1,29 @@
 import axios from 'axios'
-import { API_URL_JWT } from '../../Constants'
+import { API_URL_JWT , API_URL} from '../Constants'
 
 export const USER_NAME_SESSION_ATTRIBUTE_NAME = 'authenticatedUser'
 
-class AuthenticationService {
+class ChallengeAPI {
 
-    executeJwtAuthenticationService(username, password) {
+    executeJwtChallengeAPI(username, password) {
         return axios.post(`${API_URL_JWT}/authenticate`, {
             username,
             password
         })
     }
+
+    retrieveAllTasks() {
+        return axios.get(`${API_URL}/getAllChallengeIds`);
+      }
+    
+      executeSubmitChallenge(name, description, challengeType, sourceCode,) {
+        return axios.post(`${API_URL}/submitChallenges`, {
+          name,
+          description,
+          challengeType,
+          sourceCode,
+        });
+      }
 
     registerSuccessfulLoginForJwt(username, token) {
         sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, username)
@@ -50,4 +63,4 @@ class AuthenticationService {
     }
 }
 
-export default new AuthenticationService()
+export default new ChallengeAPI()

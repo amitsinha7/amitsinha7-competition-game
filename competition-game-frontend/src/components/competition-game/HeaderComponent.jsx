@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import AuthenticationService from "../../api/jwt/AuthenticationService";
+import ChallengeAPI from "../../api/ChallengeAPI";
 
 class HeaderComponent extends Component {
   render() {
-    const isUserLoggedIn = AuthenticationService.isUserLoggedIn();
+    const isUserLoggedIn = ChallengeAPI.isUserLoggedIn();
     return (
       <header>
         <nav className="navbar navbar-expand-sm bg-primary navbar-dark">
@@ -14,7 +14,7 @@ class HeaderComponent extends Component {
               <li>
                 <Link
                   className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/submitchallenge"
+                  to="/challenge"
                 >
                   SOLVE
                 </Link>
@@ -45,7 +45,7 @@ class HeaderComponent extends Component {
                 <Link
                   className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
                   to="/logout"
-                  onClick={AuthenticationService.logout}
+                  onClick={ChallengeAPI.logout}
                 >
                   Logout
                 </Link>

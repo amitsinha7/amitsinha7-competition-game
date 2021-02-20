@@ -9,10 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "Player")
+@Table(name = "player", uniqueConstraints = { @UniqueConstraint(columnNames = { "Nick_Name", "Email_Id" }) })
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -31,7 +32,7 @@ public class Player implements Serializable {
 	private String emailId;
 
 	@OneToMany(mappedBy = "player")
-	private Set<Task> tasks = new HashSet<>();
+	private Set<TaskStatus> taskStatusList = new HashSet<>();
 
 	public String getName() {
 		return name;
@@ -57,23 +58,23 @@ public class Player implements Serializable {
 		this.emailId = emailId;
 	}
 
-	public Set<Task> getTasks() {
-		return tasks;
+	public Set<TaskStatus> getTasks() {
+		return taskStatusList;
 	}
 
-	public void setTasks(Set<Task> tasks) {
-		this.tasks = tasks;
+	public void setTasks(Set<TaskStatus> tasks) {
+		this.taskStatusList = tasks;
 	}
 
 	public Player(@NotEmpty(message = "Player Name is required") String name,
 			@NotEmpty(message = "Player Nick Name is required") String nickName,
-			@NotEmpty(message = "Player Email Id is required") String emailId, Set<Task> tasks,
+			@NotEmpty(message = "Player Email Id is required") String emailId, Set<TaskStatus> tasks,
 			Set<Language> languages) {
 		super();
 		this.name = name;
 		this.nickName = nickName;
 		this.emailId = emailId;
-		this.tasks = tasks;
+		this.taskStatusList = tasks;
 	}
 
 	public Player(@NotEmpty(message = "Player Name is required") String name,
@@ -128,7 +129,8 @@ public class Player implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Player [name=" + name + ", nickName=" + nickName + ", emailId=" + emailId + ", tasks=" + tasks + "]";
+		return "Player [name=" + name + ", nickName=" + nickName + ", emailId=" + emailId + ", taskStatusList="
+				+ taskStatusList + "]";
 	}
 
 }

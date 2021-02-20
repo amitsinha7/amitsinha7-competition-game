@@ -1,6 +1,8 @@
 package com.competition.game.webservices.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,27 +11,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "task")
-public class Task implements Serializable {
+@Table(name = "preLoadedTask", uniqueConstraints = { @UniqueConstraint(columnNames = { "language_number", "preLoadedTaskId" }) })
+public class PreLoadedTask implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "task_id")
-	private int taskId;
+	@Column(name = "preLoadedTaskId")
+	private int preLoadedTaskId;
 
 	@ManyToOne
 	@JoinColumn(name = "language_number")
 	private Language language;
 
-	@ManyToOne
-	@JoinColumn(name = "player_Nick_Name")
-	private Player player;
+	@OneToMany(mappedBy = "preLoadedTask")
+	private Set<TaskStatus> taskStatusList = new HashSet<>();
 
 	@Column(name = "Description")
 	@NotEmpty(message = "Task  Description is required")
@@ -46,12 +49,12 @@ public class Task implements Serializable {
 	@Column(name = "CompilerArgs")
 	private String compilerArgs;
 
-	public int getTaskId() {
-		return taskId;
+	public int getPreLoadedTaskId() {
+		return preLoadedTaskId;
 	}
 
-	public void setTaskId(int taskId) {
-		this.taskId = taskId;
+	public void setPreLoadedTaskId(int preLoadedTaskId) {
+		this.preLoadedTaskId = preLoadedTaskId;
 	}
 
 	public Language getLanguage() {
@@ -62,12 +65,12 @@ public class Task implements Serializable {
 		this.language = language;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public Set<TaskStatus> getTaskStatusList() {
+		return taskStatusList;
 	}
 
-	public void setPlayer(Player player) {
-		this.player = player;
+	public void setTaskStatusList(Set<TaskStatus> taskStatusList) {
+		this.taskStatusList = taskStatusList;
 	}
 
 	public String getDescription() {
@@ -102,35 +105,6 @@ public class Task implements Serializable {
 		this.compilerArgs = compilerArgs;
 	}
 
-	public Task(int taskId, Language language, Player player,
-			@NotEmpty(message = "Task  Description is required") String description,
-			@NotEmpty(message = "Task  Input is required") String input,
-			@NotEmpty(message = "Language number is required") String output, String compilerArgs) {
-		super();
-		this.taskId = taskId;
-		this.language = language;
-		this.player = player;
-		this.description = description;
-		this.input = input;
-		this.output = output;
-		this.compilerArgs = compilerArgs;
-	}
-
-	public Task() {
-		super();
-	}
-
-	public Task(int taskId, @NotEmpty(message = "Task  Description is required") String description,
-			@NotEmpty(message = "Task  Input is required") String input,
-			@NotEmpty(message = "Language number is required") String output, String compilerArgs) {
-		super();
-		this.taskId = taskId;
-		this.description = description;
-		this.input = input;
-		this.output = output;
-		this.compilerArgs = compilerArgs;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -138,8 +112,8 @@ public class Task implements Serializable {
 		result = prime * result + ((compilerArgs == null) ? 0 : compilerArgs.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((input == null) ? 0 : input.hashCode());
+		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((output == null) ? 0 : output.hashCode());
-		result = prime * result + taskId;
 		return result;
 	}
 
@@ -151,7 +125,7 @@ public class Task implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Task other = (Task) obj;
+		PreLoadedTask other = (PreLoadedTask) obj;
 		if (compilerArgs == null) {
 			if (other.compilerArgs != null)
 				return false;
@@ -167,20 +141,54 @@ public class Task implements Serializable {
 				return false;
 		} else if (!input.equals(other.input))
 			return false;
+		if (language == null) {
+			if (other.language != null)
+				return false;
+		} else if (!language.equals(other.language))
+			return false;
 		if (output == null) {
 			if (other.output != null)
 				return false;
 		} else if (!output.equals(other.output))
 			return false;
-		if (taskId != other.taskId)
-			return false;
 		return true;
+	}
+
+	public PreLoadedTask(int preLoadedTaskId, Language language, Set<TaskStatus> taskStatusList,
+			@NotEmpty(message = "Task  Description is required") String description,
+			@NotEmpty(message = "Task  Input is required") String input,
+			@NotEmpty(message = "Language number is required") String output, String compilerArgs) {
+		super();
+		this.preLoadedTaskId = preLoadedTaskId;
+		this.language = language;
+		this.taskStatusList = taskStatusList;
+		this.description = description;
+		this.input = input;
+		this.output = output;
+		this.compilerArgs = compilerArgs;
+	}
+
+	public PreLoadedTask(int preLoadedTaskId, @NotEmpty(message = "Task  Description is required") String description,
+			@NotEmpty(message = "Task  Input is required") String input,
+			@NotEmpty(message = "Language number is required") String output, String compilerArgs) {
+		super();
+		this.preLoadedTaskId = preLoadedTaskId;
+		this.description = description;
+		this.input = input;
+		this.output = output;
+		this.compilerArgs = compilerArgs;
+	}
+
+	public PreLoadedTask() {
+		super();
+
 	}
 
 	@Override
 	public String toString() {
-		return "Task [taskId=" + taskId + ", language=" + language + ", player=" + player + ", description="
-				+ description + ", input=" + input + ", output=" + output + ", compilerArgs=" + compilerArgs + "]";
+		return "PreLoadedTask [preLoadedTaskId=" + preLoadedTaskId + ", language=" + language + ", taskStatusList="
+				+ taskStatusList + ", description=" + description + ", input=" + input + ", output=" + output
+				+ ", compilerArgs=" + compilerArgs + "]";
 	}
 
 }

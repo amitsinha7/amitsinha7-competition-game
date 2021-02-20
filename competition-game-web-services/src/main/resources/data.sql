@@ -44,3 +44,23 @@ insert into Language (name, number) values ('Brainf***', '44');
 insert into Language (name, number) values ('Fortran', '45');
 insert into Language (name, number) values ('Rust', '46');
 insert into Language (name, number) values ('Clojure', '47');
+
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('john', 'john','john@gmail.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('john2', 'john  ','john@yahoo.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('john1', 'john  ','john@icloud.com');
+
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('mac', 'mac','mac@gmail.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('mac2', 'mac  ','mac@yahoo.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('mac1', 'mac  ','mac@icloud.com');
+
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('maria', 'maria','maria@gmail.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('maria2', 'maria  ','maria@yahoo.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('maria1', 'maria  ','maria@icloud.com');
+
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa', 'alexa','alexa@gmail.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa2', 'alexa  ','alexa@yahoo.com');
+INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa1', 'alexa  ','alexa@icloud.com');
+
+
+
+

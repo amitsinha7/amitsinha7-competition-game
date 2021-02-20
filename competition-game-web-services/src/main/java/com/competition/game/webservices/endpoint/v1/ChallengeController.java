@@ -22,9 +22,13 @@ import com.competition.game.webservices.api.v1.RextesterRequest;
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.helper.Validator;
 import com.competition.game.webservices.model.Language;
-import com.competition.game.webservices.model.Task;
+import com.competition.game.webservices.model.TaskStatus;
+import com.competition.game.webservices.repository.TaskRepository;
 import com.competition.game.webservices.service.LanguageService;
+import com.competition.game.webservices.service.PlayerService;
+import com.competition.game.webservices.service.PreLoadedTaskService;
 import com.competition.game.webservices.service.RextesterService;
+import com.competition.game.webservices.service.TaskService;
 
 @RestController
 @RequestMapping("${api.path}")
@@ -37,15 +41,31 @@ public class ChallengeController {
 	private LanguageService languagesService;
 
 	@Autowired
-	private Validator validator;
-
-	@Autowired
 	private RextesterService rextesterService;
 
+	@Autowired
+	private TaskService taskService;
+
+	@Autowired
+	TaskRepository taskRepository;
+
+	@Autowired
+	PreLoadedTaskService preLoadedTaskService;
+
+	@Autowired
+	private PlayerService playerService;
+
+	@Autowired
+	private Validator validator;
+
 	// Constructor for Integration Testing
-	public ChallengeController(LanguageService languagesService, RextesterService rextesterService) {
+	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
+			TaskService taskService, PlayerService playerService, PreLoadedTaskService preLoadedTaskService) {
 		this.languagesService = languagesService;
 		this.rextesterService = rextesterService;
+		this.playerService = playerService;
+		this.taskService = taskService;
+		this.preLoadedTaskService = preLoadedTaskService;
 	}
 
 	// API to get All Languages
@@ -63,6 +83,17 @@ public class ChallengeController {
 		return new ResponseEntity<>(languagelist, new HttpHeaders(), HttpStatus.OK);
 	}
 
+	// API to get All Languages
+	@GetMapping("/getAnyUnusedRandomTask")
+	public ResponseEntity<TaskStatus> getAnyUnusedRandomTask() {
+
+		logger.debug("/v1/getAnyUnusedRandomTask method started");
+
+		TaskStatus task = taskService.getAnyUnusedRandomTask();
+
+		return new ResponseEntity<>(task, new HttpHeaders(), HttpStatus.OK);
+	}
+
 	// API to submit challenges
 	@PostMapping("/submitChallenges")
 	public ResponseEntity<Object> submitChallenges(@Valid @ModelAttribute RextesterRequest rextesterReq)
@@ -72,7 +103,7 @@ public class ChallengeController {
 
 		Language lang = this.validator.validateLanguageMapping(rextesterReq.getLanguageChoice());
 
-		if (true) {
+		if (lang != null) {
 			this.rextesterService.submitChallenge(rextesterReq);
 		} else {
 			return new ResponseEntity<>("Language Choice and Language Name mismatch ", new HttpHeaders(),

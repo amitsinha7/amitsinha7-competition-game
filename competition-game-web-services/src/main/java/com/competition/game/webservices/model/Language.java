@@ -28,7 +28,7 @@ public class Language implements Serializable {
 	private int number;
 
 	@OneToMany(mappedBy = "language")
-	private Set<Task> tasks = new HashSet<>();
+	private Set<TaskStatus> tasks = new HashSet<>();
 
 	public Language() {
 		super();
@@ -40,7 +40,7 @@ public class Language implements Serializable {
 		this.number = number;
 	}
 
-	public Language(@NotEmpty String name, int number, Set<Task> tasks) {
+	public Language(@NotEmpty String name, int number, Set<TaskStatus> tasks) {
 		super();
 		this.name = name;
 		this.number = number;
@@ -91,11 +91,11 @@ public class Language implements Serializable {
 		this.number = number;
 	}
 
-	public Set<Task> getTasks() {
+	public Set<TaskStatus> getTasks() {
 		return tasks;
 	}
 
-	public void setTasks(Set<Task> tasks) {
+	public void setTasks(Set<TaskStatus> tasks) {
 		this.tasks = tasks;
 	}
 

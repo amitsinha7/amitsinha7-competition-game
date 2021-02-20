@@ -5,24 +5,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.competition.game.webservices.model.TaskStatus;
-import com.competition.game.webservices.repository.TaskRepository;
-import com.competition.game.webservices.service.TaskService;
+import com.competition.game.webservices.model.PreLoadedTask;
+import com.competition.game.webservices.repository.PreLoadedTaskRepository;
+import com.competition.game.webservices.service.PreLoadedTaskService;
 
 @Service
-public class TaskServiceImpl implements TaskService {
+public class PreLoadedTaskServiceImpl implements PreLoadedTaskService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
-	TaskRepository taskRepository;
+	PreLoadedTaskRepository preLoadedTaskRepository;
 
 	@Override
-	public TaskStatus getAnyUnusedRandomTask() {
+	public PreLoadedTask getAnyUnusedRandomTask() {
 		logger.debug("start of getAnyUnusedRandomTask Of TaskServiceImpl");
 		return null;
 	}
-
-	
 
 }

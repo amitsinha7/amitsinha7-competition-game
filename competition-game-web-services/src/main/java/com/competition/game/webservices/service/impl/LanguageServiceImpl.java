@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.Language;
-import com.competition.game.webservices.model.Task;
+import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.repository.LanguageRepository;
 import com.competition.game.webservices.service.LanguageService;
 

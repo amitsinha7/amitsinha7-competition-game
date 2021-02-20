@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AuthenticationService from "../../api/jwt/AuthenticationService";
+import ChallengeAPI from "../../api/ChallengeAPI";
 
 class LoginComponent extends Component {
   constructor(props) {
@@ -22,16 +22,16 @@ class LoginComponent extends Component {
   }
 
   loginClicked() {
-    AuthenticationService.executeJwtAuthenticationService(
+    ChallengeAPI.executeJwtChallengeAPI(
       this.state.username,
       this.state.password
     )
       .then((response) => {
-        AuthenticationService.registerSuccessfulLoginForJwt(
+        ChallengeAPI.registerSuccessfulLoginForJwt(
           this.state.username,
           response.data.token
         );
-        this.props.history.push(`/challenge/${this.state.username}`);
+        this.props.history.push(`/challenge`);
       })
       .catch(() => {
         this.setState({ showSuccessMessage: false });

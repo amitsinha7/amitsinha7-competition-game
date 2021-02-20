@@ -1,5 +1,7 @@
 package com.competition.game.webservices;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,9 +20,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.competition.game.webservices.endpoint.v1.ChallengeController;
 import com.competition.game.webservices.exception.CustomExceptionHandler;
 import com.competition.game.webservices.model.Language;
+import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.repository.LanguageRepository;
+import com.competition.game.webservices.repository.TaskRepository;
 import com.competition.game.webservices.service.LanguageService;
+import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.RextesterService;
+import com.competition.game.webservices.service.TaskService;
 
 @RunWith(SpringRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -37,6 +43,15 @@ public class CompetitionGameApplicationTests {
 	private RextesterService rextesterService;
 
 	@Autowired
+	private TaskService taskService;
+	
+	@Autowired
+	TaskRepository taskRepository;
+
+	@Autowired
+	private PlayerService playerService;
+
+	@Autowired
 	private CustomExceptionHandler exceptionTranslator;
 
 	@Autowired
@@ -48,12 +63,15 @@ public class CompetitionGameApplicationTests {
 
 	@Before
 	public void setup() {
-		MockitoAnnotations.initMocks(false);
-		ChallengeController challengeController = new ChallengeController(languagesService, rextesterService);
-		this.restLanguagesMockMvc = MockMvcBuilders.standaloneSetup(challengeController)
-				.setControllerAdvice(exceptionTranslator)
-				.setConversionService(TestUtil.createFormattingConversionService())
-				.setMessageConverters(jacksonMessageConverter).build();
+		/*
+		 * MockitoAnnotations.initMocks(false); ChallengeController challengeController
+		 * = new ChallengeController(languagesService, rextesterService, taskService,
+		 * playerService); this.restLanguagesMockMvc =
+		 * MockMvcBuilders.standaloneSetup(challengeController)
+		 * .setControllerAdvice(exceptionTranslator)
+		 * .setConversionService(TestUtil.createFormattingConversionService())
+		 * .setMessageConverters(jacksonMessageConverter).build();
+		 */
 	}
 
 	@Before
@@ -69,9 +87,35 @@ public class CompetitionGameApplicationTests {
 	@Test
 	public void getEmployee() throws Exception {
 		// save
-		Language lang = languagesRepository.saveAndFlush(languages);
-		// fetch the inserted record
-		restLanguagesMockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getAllLanguages", lang.getName()))
-				.andExpect(MockMvcResultMatchers.status().isOk());
+		/*
+		 * Language lang = languagesRepository.saveAndFlush(languages);
+		 * 
+		 * List<Language> langs= languagesRepository.findAll();
+		 * 
+		 * Task task = new Task();
+		 * task.setDescription("Swap two numbers without using third variable");
+		 * task.setLanguage(lang);
+		 * 
+		 * 
+		 * // fetch the inserted record
+		 * restLanguagesMockMvc.perform(MockMvcRequestBuilders.get(
+		 * "/api/v1/getAllLanguages", lang.getName()))
+		 * .andExpect(MockMvcResultMatchers.status().isOk());
+		 */
+	}
+	
+	@Test
+	public void generateData() throws Exception {
+			
+		List<Language> langs= languagesRepository.findAll();
+		
+		TaskStatus task = new TaskStatus();
+		
+		for (Language language : langs) {
+			task.setLanguage(language);
+			System.out.println(task.toString());
+			taskRepository.save(task);
+			System.out.println(task.toString());
+		}
 	}
 }
