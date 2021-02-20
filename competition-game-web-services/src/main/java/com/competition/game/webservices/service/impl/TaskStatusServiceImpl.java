@@ -7,31 +7,32 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.competition.game.webservices.model.PreLoadedTask;
 import com.competition.game.webservices.model.TaskStatus;
-import com.competition.game.webservices.repository.PreLoadedTaskRepository;
 import com.competition.game.webservices.repository.TaskStatusRepository;
-import com.competition.game.webservices.service.PreLoadedTaskService;
+import com.competition.game.webservices.service.TaskStatusService;
 
 @Service
-public class PreLoadedTaskServiceImpl implements PreLoadedTaskService {
+public class TaskStatusServiceImpl implements TaskStatusService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	PreLoadedTaskRepository preLoadedTaskRepository;
+	TaskStatusRepository taskRepository;
+
+	
 
 	@Override
-	public List<PreLoadedTask> getRandomTaskForPlayer() {
-		
-		List<PreLoadedTask> preLoadedTasks = null;
+	public List<Integer> getTasksAlreadyPerformed(String nickName) {
+
+		List<TaskStatus> listOfTaskStatus;
+		logger.debug("getTasksAlreadyPerformed");
 		try {
-			preLoadedTasks = preLoadedTaskRepository.findAll();
-			
+			listOfTaskStatus = taskRepository.findAllByNickName(nickName);
+
 		} catch (Exception e) {
-			
+			// TODO: handle exception
 		}
-		return preLoadedTasks;
+		return null;
 	}
 
 }

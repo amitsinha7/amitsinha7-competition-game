@@ -22,11 +22,11 @@ import com.competition.game.webservices.exception.CustomExceptionHandler;
 import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.repository.LanguageRepository;
-import com.competition.game.webservices.repository.TaskRepository;
+import com.competition.game.webservices.repository.TaskStatusRepository;
 import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.RextesterService;
-import com.competition.game.webservices.service.TaskService;
+import com.competition.game.webservices.service.TaskStatusService;
 
 @RunWith(SpringRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -43,10 +43,10 @@ public class CompetitionGameApplicationTests {
 	private RextesterService rextesterService;
 
 	@Autowired
-	private TaskService taskService;
+	private TaskStatusService taskService;
 	
 	@Autowired
-	TaskRepository taskRepository;
+	TaskStatusRepository taskRepository;
 
 	@Autowired
 	private PlayerService playerService;

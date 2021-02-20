@@ -16,19 +16,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.competition.game.webservices.api.v1.ErrorInfo;
+import com.competition.game.webservices.api.v1.PreLoadedTaskResponse;
 import com.competition.game.webservices.api.v1.RextesterRequest;
+import com.competition.game.webservices.constant.Constants;
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.helper.Validator;
 import com.competition.game.webservices.model.Language;
-import com.competition.game.webservices.model.TaskStatus;
-import com.competition.game.webservices.repository.TaskRepository;
+import com.competition.game.webservices.model.PreLoadedTask;
 import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.PreLoadedTaskService;
 import com.competition.game.webservices.service.RextesterService;
-import com.competition.game.webservices.service.TaskService;
+import com.competition.game.webservices.service.TaskStatusService;
 
 @RestController
 @RequestMapping("${api.path}")
@@ -44,10 +47,7 @@ public class ChallengeController {
 	private RextesterService rextesterService;
 
 	@Autowired
-	private TaskService taskService;
-
-	@Autowired
-	TaskRepository taskRepository;
+	private TaskStatusService taskStatusService;
 
 	@Autowired
 	PreLoadedTaskService preLoadedTaskService;
@@ -60,38 +60,32 @@ public class ChallengeController {
 
 	// Constructor for Integration Testing
 	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
-			TaskService taskService, PlayerService playerService, PreLoadedTaskService preLoadedTaskService) {
+			TaskStatusService taskStatusService, PlayerService playerService, PreLoadedTaskService preLoadedTaskService) {
 		this.languagesService = languagesService;
 		this.rextesterService = rextesterService;
 		this.playerService = playerService;
-		this.taskService = taskService;
+		this.taskStatusService = taskStatusService;
 		this.preLoadedTaskService = preLoadedTaskService;
 	}
 
 	// API to get All Languages
-	@GetMapping("/getAllLanguages")
-	public ResponseEntity<List<Language>> getAllLanguages() throws RecordNotFoundException {
+	@GetMapping("/getRandomTaskForPlayer")
+	public ResponseEntity<PreLoadedTaskResponse> getRandomTaskForPlayer(@RequestParam String nickName)
+			throws RecordNotFoundException {
 
-		logger.debug("/v1/getAllChallengeIds method started");
-
-		List<Language> languagelist = languagesService.getAllLanguages();
-
-		if (languagelist.size() <= 0) {
-			throw new RecordNotFoundException("Languages are not found");
+		PreLoadedTask preLoadedTask;
+		PreLoadedTaskResponse response = new PreLoadedTaskResponse();
+		try {
+			logger.debug("/v1/getRandomTaskForPlayer method started");
+			List<PreLoadedTask> preLoadedTasks = preLoadedTaskService.getRandomTaskForPlayer();
+			List<Integer> tasksAlreadyPerformed = taskStatusService.getTasksAlreadyPerformed(nickName);
+		} catch (Exception e) {
+			logger.debug("Exception: " + e.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<PreLoadedTaskResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		return new ResponseEntity<PreLoadedTaskResponse>(response, new HttpHeaders(), HttpStatus.OK);
 
-		return new ResponseEntity<>(languagelist, new HttpHeaders(), HttpStatus.OK);
-	}
-
-	// API to get All Languages
-	@GetMapping("/getAnyUnusedRandomTask")
-	public ResponseEntity<TaskStatus> getAnyUnusedRandomTask() {
-
-		logger.debug("/v1/getAnyUnusedRandomTask method started");
-
-		TaskStatus task = taskService.getAnyUnusedRandomTask();
-
-		return new ResponseEntity<>(task, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	// API to submit challenges
@@ -112,5 +106,12 @@ public class ChallengeController {
 
 		return new ResponseEntity<>("!!! Thank you for participating in Challenge !!!! ", new HttpHeaders(),
 				HttpStatus.ACCEPTED);
+	}
+
+	private ErrorInfo getErrorInfo(String errorCode) {
+		ErrorInfo errorInfo = new ErrorInfo();
+		errorInfo.setErrorCode(errorCode);
+		errorInfo.setErrorMessage(Constants.errorStore.get(errorCode));
+		return errorInfo;
 	}
 }

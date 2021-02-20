@@ -1,9 +1,9 @@
 package com.competition.game.webservices.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,8 +27,8 @@ public class Language implements Serializable {
 	@Column(name = "number")
 	private int number;
 
-	@OneToMany(mappedBy = "language")
-	private Set<TaskStatus> tasks = new HashSet<>();
+	@OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
+	private Set<TaskStatus> tasks;
 
 	public Language() {
 		super();

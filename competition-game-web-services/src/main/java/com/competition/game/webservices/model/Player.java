@@ -1,9 +1,9 @@
 package com.competition.game.webservices.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,8 +31,8 @@ public class Player implements Serializable {
 	@NotEmpty(message = "Player Email Id is required")
 	private String emailId;
 
-	@OneToMany(mappedBy = "player")
-	private Set<TaskStatus> taskStatusList = new HashSet<>();
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+	private Set<TaskStatus> taskStatusList;
 
 	public String getName() {
 		return name;

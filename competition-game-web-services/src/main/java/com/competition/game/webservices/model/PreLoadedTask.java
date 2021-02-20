@@ -1,9 +1,9 @@
 package com.competition.game.webservices.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,8 +31,8 @@ public class PreLoadedTask implements Serializable {
 	@JoinColumn(name = "language_number")
 	private Language language;
 
-	@OneToMany(mappedBy = "preLoadedTask")
-	private Set<TaskStatus> taskStatusList = new HashSet<>();
+	@OneToMany(mappedBy = "preLoadedTask", cascade = CascadeType.ALL)
+	private Set<TaskStatus> taskStatusList;
 
 	@Column(name = "Description")
 	@NotEmpty(message = "Task  Description is required")
