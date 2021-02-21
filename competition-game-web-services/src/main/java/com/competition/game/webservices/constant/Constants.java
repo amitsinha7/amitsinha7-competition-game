@@ -22,5 +22,6 @@ public final class Constants {
 		
 		
 		errorStore.put("220001", "User Already Present .. Please try with other deatils");
+		errorStore.put("220002", "Something Wrong On Submission");
 	}
 }

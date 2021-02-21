@@ -1,6 +1,6 @@
 package com.competition.game.webservices.endpoint.v1;
 
-import java.io.IOException;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -30,6 +30,7 @@ import com.competition.game.webservices.helper.Helper;
 import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.Player;
 import com.competition.game.webservices.model.PreLoadedTask;
+import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.PreLoadedTaskService;
@@ -96,6 +97,30 @@ public class ChallengeController {
 		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.CREATED);
 	}
 
+	// API to Get Top Player
+	@GetMapping("/getTopPlayer")
+	public ResponseEntity<ResponseDTO> getTopPlayer() {
+
+		logger.debug("/v1/getTopPlayer method started");
+		ResponseDTO response = new ResponseDTO();
+
+		try {
+			List<TaskStatus> completedTasks = this.taskStatusService.findAllTaskStatus();
+			response.setToppers(this.helper.getTopPlayer(completedTasks));
+		} catch (RecordNotFoundException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.NOT_FOUND);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
 	// API to Get Random Task For a Player
 	@GetMapping("/getRandomTaskForPlayer")
 	public ResponseEntity<ResponseDTO> getRandomTaskForPlayer(@Valid @RequestParam String nickName,
@@ -126,7 +151,7 @@ public class ChallengeController {
 	// API to submit challenges
 	@PostMapping("/submitChallenge")
 	public ResponseEntity<ResponseDTO> submitChallenges(@Valid @ModelAttribute RextesterRequest rextesterReq)
-			throws InterruptedException, IOException {
+			throws CustomException {
 
 		logger.debug("/v1/submitChallenge method started");
 		ResponseDTO response = new ResponseDTO();
@@ -138,6 +163,7 @@ public class ChallengeController {
 			PreLoadedTask preLoadedTask = this.preLoadedTaskService.getPreLoadedTask(rextesterReq.getPreLoadedTaskId());
 			if (this.helper.validatePreLoadedTask(rextesterReq, preLoadedTask)) {
 				this.rextesterService.submitChallenge(rextesterReq.getProgram(), lang, player, preLoadedTask);
+				response.setMessage("Thank you for your active participation");
 			} else {
 				throw new RecordNotFoundException("No Task record Mismatch for given input");
 			}
@@ -148,21 +174,10 @@ public class ChallengeController {
 			errorInfo.setErrorMessage(e.getMessage());
 			response.setErrorInfo(errorInfo);
 			return new ResponseEntity<ResponseDTO>(response, HttpStatus.NOT_FOUND);
-		}catch (InterruptedException e) {
-			logger.error(e.getMessage());
-			ErrorInfo errorInfo = new ErrorInfo();
-			errorInfo.setErrorMessage(e.getMessage());
-			response.setErrorInfo(errorInfo);
-			return new ResponseEntity<ResponseDTO>(response, HttpStatus.SERVICE_UNAVAILABLE);
-		} 
-		catch (IOException e) {
-			logger.error(e.getMessage());
-			ErrorInfo errorInfo = new ErrorInfo();
-			errorInfo.setErrorMessage(e.getMessage());
-			response.setErrorInfo(errorInfo);
-			return new ResponseEntity<ResponseDTO>(response, HttpStatus.SERVICE_UNAVAILABLE);
-		} 
-		catch (Exception ex) {
+		} catch (CustomException ce) {
+			response.setErrorInfo(getErrorInfo(ce.getMessage()));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.BAD_GATEWAY);
+		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 			response.setErrorInfo(getErrorInfo("110001"));
 			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);

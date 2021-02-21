@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.repository.TaskStatusRepository;
 import com.competition.game.webservices.service.TaskStatusService;
@@ -38,6 +40,7 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 	}
 
 	@Override
+	@Transactional
 	public TaskStatus createOrUpdateTaskStatus(TaskStatus taskStatus) {
 
 		logger.debug("createOrUpdateTaskStatus method started {}", taskStatus);
@@ -52,6 +55,18 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 			return taskStatusRepository.save(taskStatus);
 		}
 
+	}
+
+	@Override
+	public List<TaskStatus> findAllTaskStatus() throws RecordNotFoundException {
+		logger.debug("getTopPlayer started ");
+
+		List<TaskStatus> tasks = taskStatusRepository.findAll();
+
+		if (tasks.size() > 0)
+			return tasks;
+		else
+			throw new RecordNotFoundException("Top Player not exist in our system");
 	}
 
 }

@@ -41,7 +41,6 @@ public class PreLoadedTask implements Serializable {
 	private String description;
 
 	@Column(name = "Input")
-	@NotEmpty(message = "Task  Input is required")
 	private String input;
 
 	@Column(name = "Output")

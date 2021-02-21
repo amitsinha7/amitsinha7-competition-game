@@ -1,8 +1,6 @@
 package com.competition.game.webservices.service.impl;
 
-import java.io.IOException;
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +11,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.competition.game.webservices.exception.CustomException;
 import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.Player;
 import com.competition.game.webservices.model.PreLoadedTask;
@@ -27,7 +25,6 @@ import com.competition.game.webservices.service.RextesterService;
 import com.competition.game.webservices.service.TaskStatusService;
 
 @Service
-@Transactional
 public class RextesterServiceImpl implements RextesterService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -57,8 +54,8 @@ public class RextesterServiceImpl implements RextesterService {
 	}
 
 	@Override
-	public CompletableFuture<Rextester> submitChallenge(String program, Language lang, Player player,
-			PreLoadedTask preLoadedTask) throws InterruptedException, IOException {
+	public void submitChallenge(String program, Language lang, Player player, PreLoadedTask preLoadedTask)
+			throws CustomException {
 
 		logger.debug("submitChallenge Of RextesterServiceImpl");
 		TaskStatus taskStatus = new TaskStatus();
@@ -66,27 +63,33 @@ public class RextesterServiceImpl implements RextesterService {
 		Rextester rextester = null;
 		Rextester rextesterResponse = null;
 
-		taskStatus.setLanguage(lang);
-		taskStatus.setPlayer(player);
-		taskStatus.setPreLoadedTask(preLoadedTask);
-		taskStatus.setStatus("CREATED");
-		taskStatus = this.taskStatusService.createOrUpdateTaskStatus(taskStatus);
+		try {
+			taskStatus.setLanguage(lang);
+			taskStatus.setPlayer(player);
+			taskStatus.setPreLoadedTask(preLoadedTask);
+			taskStatus.setStatus("CREATED");
+			taskStatus = this.taskStatusService.createOrUpdateTaskStatus(taskStatus);
 
-		request.add("LanguageChoice", lang.getNumber());
-		request.add("Program", program);
-		if (preLoadedTask.getInput() != null && !preLoadedTask.getInput().isEmpty()) {
-			request.add("Input", preLoadedTask.getInput());
+			request.add("LanguageChoice", lang.getNumber());
+			request.add("Program", program);
+			if (preLoadedTask.getInput() != null && !preLoadedTask.getInput().isEmpty()) {
+				request.add("Input", preLoadedTask.getInput());
+			}
+			if (preLoadedTask.getCompilerArgs() != null && !preLoadedTask.getCompilerArgs().isEmpty()) {
+				request.add("CompilerArgs", preLoadedTask.getCompilerArgs());
+			}
+			HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request,
+					this.createHttpHeaders());
+			rextesterResponse = this.restTemplate.postForObject(url, entity, Rextester.class);
+			rextester = this.rextesterRepository.save(rextesterResponse);
+			if (rextester.getResult().equals(taskStatus.getPreLoadedTask().getOutput())) {
+				taskStatus.setStatus("COMPLETED");
+				taskStatus = this.taskStatusService.createOrUpdateTaskStatus(taskStatus);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			throw new CustomException("220002");
 		}
-		if (preLoadedTask.getCompilerArgs() != null && !preLoadedTask.getCompilerArgs().isEmpty()) {
-			request.add("CompilerArgs", preLoadedTask.getCompilerArgs());
-		}
-		HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request, this.createHttpHeaders());
-		rextesterResponse = this.restTemplate.postForObject(url, entity, Rextester.class);
-
-		rextester = this.rextesterRepository.save(rextesterResponse);
-
-		return CompletableFuture.completedFuture(rextester);
-
 	}
 
 }
