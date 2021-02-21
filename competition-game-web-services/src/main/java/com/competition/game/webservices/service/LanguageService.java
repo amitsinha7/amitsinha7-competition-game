@@ -9,6 +9,8 @@ public interface LanguageService {
 
 	List<Language> getAllLanguages();
 
-	Language findLanguageByNumber(int languageChoice) throws RecordNotFoundException;
+	boolean validateLanguageName(String languageName) throws RecordNotFoundException;
+
+	Language getLanguage(String languageName) throws RecordNotFoundException;
 
 }

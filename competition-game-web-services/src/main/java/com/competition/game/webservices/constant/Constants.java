@@ -18,5 +18,9 @@ public final class Constants {
 		errorStore.put("110001", "Something went wrong, please try again later.");
 		errorStore.put("110002", "Bad request, please check request.");
 		errorStore.put("110003", "IOException Occured");
+		errorStore.put("110004", "JPA Transaction failed Try After Some Time");
+		
+		
+		errorStore.put("220001", "User Already Present .. Please try with other deatils");
 	}
 }

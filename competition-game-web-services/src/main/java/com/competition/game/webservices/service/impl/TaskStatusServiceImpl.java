@@ -1,5 +1,9 @@
 package com.competition.game.webservices.service.impl;
 
+import static java.util.Objects.nonNull;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,11 +24,33 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 	TaskStatusRepository taskStatusRepository;
 
 	@Override
-	public List<TaskStatus> getTasksAlreadyPerformed(String nickName) {
+	public List<TaskStatus> getTasksAlreadyPerformed(String nickName, String languageName) {
 
-		logger.debug("getTasksAlreadyPerformed");
+		logger.debug("getTasksAlreadyPerformed started ");
 
-		return taskStatusRepository.findAllByNickName(nickName);
+		List<TaskStatus> tasks = taskStatusRepository.findTasksByNickNameAndLanguageName(nickName, languageName);
+
+		if (tasks.size() > 0)
+			return tasks;
+		else
+			return new ArrayList<>();
+
+	}
+
+	@Override
+	public TaskStatus createOrUpdateTaskStatus(TaskStatus taskStatus) {
+
+		logger.debug("createOrUpdateTaskStatus method started {}", taskStatus);
+		TaskStatus record = taskStatusRepository.findById(taskStatus.getTaskStatusId()).orElse(null);
+		if (nonNull(record)) {
+			logger.debug("update the record");
+			record.setUpdateMadified(Calendar.getInstance());
+			return taskStatusRepository.save(record);
+		} else {
+			logger.debug("save the record");
+			taskStatus.setUpdateMadified(Calendar.getInstance());
+			return taskStatusRepository.save(taskStatus);
+		}
 
 	}
 

@@ -1,28 +1,33 @@
 package com.competition.game.webservices.service.impl;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
-
-import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import com.competition.game.webservices.api.v1.RextesterRequest;
+import com.competition.game.webservices.model.Language;
+import com.competition.game.webservices.model.Player;
+import com.competition.game.webservices.model.PreLoadedTask;
 import com.competition.game.webservices.model.Rextester;
+import com.competition.game.webservices.model.TaskStatus;
+import com.competition.game.webservices.repository.RextesterRepository;
 import com.competition.game.webservices.service.RextesterService;
+import com.competition.game.webservices.service.TaskStatusService;
 
 @Service
+@Transactional
 public class RextesterServiceImpl implements RextesterService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -30,10 +35,18 @@ public class RextesterServiceImpl implements RextesterService {
 	private final RestTemplate restTemplate;
 
 	@Value("${url.rextester}")
-	private static String url;
+	private String url;
+
+	@Autowired
+	RextesterRepository rextesterRepository;
+
+	@Autowired
+	TaskStatusService taskStatusService;
 
 	public RextesterServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-		this.restTemplate = restTemplateBuilder.build();
+		this.restTemplate = restTemplateBuilder.setConnectTimeout(Duration.ofSeconds(60))
+				.setReadTimeout(Duration.ofSeconds(60)).build();
+
 	}
 
 	protected HttpHeaders createHttpHeaders() {
@@ -44,32 +57,35 @@ public class RextesterServiceImpl implements RextesterService {
 	}
 
 	@Override
-	public CompletableFuture<Rextester> submitChallenge(@Valid RextesterRequest rextesterReq)
-			throws InterruptedException, IOException {
+	public CompletableFuture<Rextester> submitChallenge(String program, Language lang, Player player,
+			PreLoadedTask preLoadedTask) throws InterruptedException, IOException {
+
 		logger.debug("submitChallenge Of RextesterServiceImpl");
+		TaskStatus taskStatus = new TaskStatus();
 		LinkedMultiValueMap<String, Object> request = new LinkedMultiValueMap<>();
-		String response;
+		Rextester rextester = null;
 		Rextester rextesterResponse = null;
-		HttpStatus httpStatus = HttpStatus.CREATED;
-		try {
-			request.add("LanguageChoice", rextesterReq.getLanguageChoice());
-			request.add("Program", rextesterReq.getProgram());
-			request.add("Input", httpStatus);
-			request.add("CompilerArgs", httpStatus);
 
-			HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request,
-					this.createHttpHeaders());
-			rextesterResponse = restTemplate.postForObject(url, entity, Rextester.class);
+		taskStatus.setLanguage(lang);
+		taskStatus.setPlayer(player);
+		taskStatus.setPreLoadedTask(preLoadedTask);
+		taskStatus.setStatus("CREATED");
+		taskStatus = this.taskStatusService.createOrUpdateTaskStatus(taskStatus);
 
-			Thread.sleep(1000L);
-		} catch (HttpStatusCodeException e) {
-			httpStatus = HttpStatus.valueOf(e.getStatusCode().value());
-			response = e.getResponseBodyAsString();
-		} catch (Exception e) {
-			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-			response = e.getMessage();
+		request.add("LanguageChoice", lang.getNumber());
+		request.add("Program", program);
+		if (preLoadedTask.getInput() != null && !preLoadedTask.getInput().isEmpty()) {
+			request.add("Input", preLoadedTask.getInput());
 		}
-		return CompletableFuture.completedFuture(rextesterResponse);
+		if (preLoadedTask.getCompilerArgs() != null && !preLoadedTask.getCompilerArgs().isEmpty()) {
+			request.add("CompilerArgs", preLoadedTask.getCompilerArgs());
+		}
+		HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request, this.createHttpHeaders());
+		rextesterResponse = this.restTemplate.postForObject(url, entity, Rextester.class);
+
+		rextester = this.rextesterRepository.save(rextesterResponse);
+
+		return CompletableFuture.completedFuture(rextester);
 
 	}
 

@@ -14,7 +14,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "player", uniqueConstraints = { @UniqueConstraint(columnNames = { "Nick_Name", "Email_Id" }) })
+@Table(name = "player", uniqueConstraints = { @UniqueConstraint(columnNames = { "Nick_Name", "name", "Email_Id" }) })
 public class Player implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -29,7 +29,6 @@ public class Player implements Serializable {
 	private String nickName;
 
 	@Column(name = "Email_Id")
-	@NotEmpty(message = "Player Email Id is required")
 	private String emailId;
 
 	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

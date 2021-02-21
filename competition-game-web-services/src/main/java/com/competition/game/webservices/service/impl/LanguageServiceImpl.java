@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.Language;
-import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.repository.LanguageRepository;
 import com.competition.game.webservices.service.LanguageService;
 
@@ -36,16 +35,26 @@ public class LanguageServiceImpl implements LanguageService {
 	}
 
 	@Override
-	public Language findLanguageByNumber(int languageChoice) throws RecordNotFoundException {
+	public Language getLanguage(String languageName) throws RecordNotFoundException {
+		logger.debug("getLanguage method started {}", languageName);
 
-		logger.debug("validateLanguage method started {}", languageChoice);
-
-		Language language = languagesRepository.findLanguageByNumber(languageChoice).orElse(null);
+		Language language = languagesRepository.findLanguageByName(languageName).orElse(null);
 
 		if (nonNull(language))
 			return language;
 		else
-			throw new RecordNotFoundException("No language record exist for given languageChoice provided");
+			throw new RecordNotFoundException("No language record exist for languageChoice provided");
+	}
+
+	@Override
+	public boolean validateLanguageName(String languageName) throws RecordNotFoundException {
+		logger.debug("validateLanguage method started {}", languageName);
+
+		Language language = languagesRepository.findLanguageByName(languageName).orElse(null);
+		if (nonNull(language))
+			return true;
+		else
+			throw new RecordNotFoundException("No language record exist ... Try with different language");
 	}
 
 }

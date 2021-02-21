@@ -11,7 +11,7 @@ import com.competition.game.webservices.model.Language;
 @Repository
 public interface LanguageRepository extends JpaRepository<Language, Integer> {
 
-	@Query("SELECT u FROM Language u WHERE u.number = ?1")
-	Optional<Language> findLanguageByNumber(int languageChoice);
+	@Query("SELECT u FROM Language u WHERE u.name = ?1")
+	Optional<Language> findLanguageByName(String languageName);
 
 }

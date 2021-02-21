@@ -12,10 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "language")
+@Table(name = "language", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
 public class Language implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -28,7 +29,7 @@ public class Language implements Serializable {
 	@Column(name = "number")
 	private int number;
 
-	@OneToMany(mappedBy = "language", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "language", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<TaskStatus> tasks;
 
 	public Language() {

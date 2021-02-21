@@ -6,6 +6,8 @@ import com.competition.game.webservices.model.TaskStatus;
 
 public interface TaskStatusService {
 
-	List<TaskStatus> getTasksAlreadyPerformed(String nickName);
+	List<TaskStatus> getTasksAlreadyPerformed(String nickName, String languageName);
+
+	TaskStatus createOrUpdateTaskStatus(TaskStatus taskStatus);
 
 }

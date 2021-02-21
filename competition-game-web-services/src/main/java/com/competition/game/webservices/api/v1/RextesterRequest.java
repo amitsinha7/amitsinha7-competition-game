@@ -5,52 +5,33 @@ import javax.validation.constraints.NotNull;
 
 public class RextesterRequest {
 
-	@NotNull
 	@NotEmpty
-	private String username;
-	@NotNull
-	private int languageChoice;
-	@NotNull
+	private String nickName;
+
 	@NotEmpty
 	private String languageName;
 
-	@NotNull
 	@NotEmpty
 	private String program;
+
+	@NotNull
+	private int preLoadedTaskId;
+
+	@NotEmpty
+	private String description;
+
+	private String output;
 
 	private String input;
 
 	private String compilerArgs;
 
-	public RextesterRequest() {
+	public String getNickName() {
+		return nickName;
 	}
 
-	public RextesterRequest(@NotNull @NotEmpty String username, @NotNull int languageChoice,
-			@NotNull @NotEmpty String languageName, @NotNull @NotEmpty String program, String input,
-			String compilerArgs) {
-		super();
-		this.username = username;
-		this.languageChoice = languageChoice;
-		this.languageName = languageName;
-		this.program = program;
-		this.input = input;
-		this.compilerArgs = compilerArgs;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public int getLanguageChoice() {
-		return languageChoice;
-	}
-
-	public void setLanguageChoice(int languageChoice) {
-		this.languageChoice = languageChoice;
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 
 	public String getLanguageName() {
@@ -69,6 +50,22 @@ public class RextesterRequest {
 		this.program = program;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getOutput() {
+		return output;
+	}
+
+	public void setOutput(String output) {
+		this.output = output;
+	}
+
 	public String getInput() {
 		return input;
 	}
@@ -85,16 +82,50 @@ public class RextesterRequest {
 		this.compilerArgs = compilerArgs;
 	}
 
+	public RextesterRequest() {
+	}
+
+	public int getPreLoadedTaskId() {
+		return preLoadedTaskId;
+	}
+
+	public void setPreLoadedTaskId(int preLoadedTaskId) {
+		this.preLoadedTaskId = preLoadedTaskId;
+	}
+
+	public RextesterRequest(@NotEmpty String nickName, @NotEmpty String languageName, @NotEmpty String program,
+			@NotEmpty int preLoadedTaskId, @NotEmpty String description, @NotEmpty String output, String input,
+			String compilerArgs) {
+		super();
+		this.nickName = nickName;
+		this.languageName = languageName;
+		this.program = program;
+		this.preLoadedTaskId = preLoadedTaskId;
+		this.description = description;
+		this.output = output;
+		this.input = input;
+		this.compilerArgs = compilerArgs;
+	}
+
+	public RextesterRequest(@NotEmpty String program, @NotEmpty String description, @NotEmpty String output,
+			String input, String compilerArgs) {
+		super();
+		this.program = program;
+		this.description = description;
+		this.output = output;
+		this.input = input;
+		this.compilerArgs = compilerArgs;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((compilerArgs == null) ? 0 : compilerArgs.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((input == null) ? 0 : input.hashCode());
-		result = prime * result + languageChoice;
-		result = prime * result + ((languageName == null) ? 0 : languageName.hashCode());
+		result = prime * result + ((output == null) ? 0 : output.hashCode());
 		result = prime * result + ((program == null) ? 0 : program.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -112,35 +143,34 @@ public class RextesterRequest {
 				return false;
 		} else if (!compilerArgs.equals(other.compilerArgs))
 			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
 		if (input == null) {
 			if (other.input != null)
 				return false;
 		} else if (!input.equals(other.input))
 			return false;
-		if (languageChoice != other.languageChoice)
-			return false;
-		if (languageName == null) {
-			if (other.languageName != null)
+		if (output == null) {
+			if (other.output != null)
 				return false;
-		} else if (!languageName.equals(other.languageName))
+		} else if (!output.equals(other.output))
 			return false;
 		if (program == null) {
 			if (other.program != null)
 				return false;
 		} else if (!program.equals(other.program))
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "RextesterRequest [username=" + username + ", languageChoice=" + languageChoice + ", languageName="
-				+ languageName + ", program=" + program + ", input=" + input + ", compilerArgs=" + compilerArgs + "]";
+		return "RextesterRequest [nickName=" + nickName + ", languageName=" + languageName + ", program=" + program
+				+ ", preLoadedTaskId=" + preLoadedTaskId + ", description=" + description + ", output=" + output
+				+ ", input=" + input + ", compilerArgs=" + compilerArgs + "]";
 	}
 
 }

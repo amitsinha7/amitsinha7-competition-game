@@ -1,5 +1,9 @@
 package com.competition.game.webservices.api.v1;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class ErrorInfo {
 
 	private String errorCode;

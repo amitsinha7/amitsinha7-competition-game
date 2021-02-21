@@ -63,6 +63,10 @@ INSERT INTO PLAYER (NICK_NAME, NAME, EMAIL_ID) values ('alexa1', 'alexa  ','alex
 
 INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES
 ('','Write a java program to swap two numbers without using third variable','7 9','Before Swap A=7 and B=9
+After Swap A=9 and B=7','1');
+
+INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES
+('','Write a java program to swap two numbers without using third variable','7 9','Before Swap A=7 and B=9
 After Swap A=9 and B=7','17');
 
 INSERT INTO PRE_LOADED_TASK(COMPILER_ARGS,DESCRIPTION,INPUT,OUTPUT,LANGUAGE_NUMBER)VALUES

@@ -12,7 +12,6 @@ import com.competition.game.webservices.model.PreLoadedTask;
 @Repository
 public interface PreLoadedTaskRepository extends JpaRepository<PreLoadedTask, Integer> {
 
-	@Query("FROM PreLoadedTask g where g.language.number = :number")
-	List<PreLoadedTask> findTasksForLanguageChoice(@Param("number") int number);
-
+	@Query("FROM PreLoadedTask g where g.language.name = :name")
+	List<PreLoadedTask> findTasksForLanguageName(@Param("name") String name);
 }

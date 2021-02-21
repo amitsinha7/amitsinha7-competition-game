@@ -1,7 +1,6 @@
 package com.competition.game.webservices.endpoint.v1;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.validation.Valid;
 
@@ -15,19 +14,22 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.competition.game.webservices.api.v1.ErrorInfo;
-import com.competition.game.webservices.api.v1.PreLoadedTaskResponse;
+import com.competition.game.webservices.api.v1.PlayerRequest;
+import com.competition.game.webservices.api.v1.ResponseDTO;
 import com.competition.game.webservices.api.v1.RextesterRequest;
 import com.competition.game.webservices.constant.Constants;
+import com.competition.game.webservices.exception.CustomException;
 import com.competition.game.webservices.exception.RecordNotFoundException;
-import com.competition.game.webservices.helper.Validator;
+import com.competition.game.webservices.helper.Helper;
 import com.competition.game.webservices.model.Language;
+import com.competition.game.webservices.model.Player;
 import com.competition.game.webservices.model.PreLoadedTask;
-import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.PreLoadedTaskService;
@@ -57,7 +59,7 @@ public class ChallengeController {
 	private PlayerService playerService;
 
 	@Autowired
-	private Validator validator;
+	private Helper helper;
 
 	// Constructor for Integration Testing
 	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
@@ -70,46 +72,102 @@ public class ChallengeController {
 		this.preLoadedTaskService = preLoadedTaskService;
 	}
 
-	// API to get All Languages
-	@GetMapping("/getRandomTaskForPlayer")
-	public ResponseEntity<PreLoadedTaskResponse> getRandomTaskForPlayer(@Valid @RequestParam String nickName,
-			@Valid @RequestParam int languageChoice) throws RecordNotFoundException {
+	// Create New Player
+	@PostMapping("/createPlayer")
+	public ResponseEntity<ResponseDTO> createPlayer(@Valid @RequestBody PlayerRequest playerRequest)
+			throws CustomException {
 
-		PreLoadedTask preLoadedTask;
-		PreLoadedTaskResponse response = new PreLoadedTaskResponse();
-		List<PreLoadedTask> preLoadedTasks;
-		List<TaskStatus> tasksAlreadyPerformed;
+		logger.debug("createPlayer method started {}", playerRequest);
+		ResponseDTO response = new ResponseDTO();
 		try {
-			logger.debug("/v1/getRandomTaskForPlayer method started");
-			preLoadedTasks= preLoadedTaskService.getTasksForLanguageChoice(languageChoice);
-			tasksAlreadyPerformed = taskStatusService.getTasksAlreadyPerformed(nickName);
+			Player player = this.playerService.validateAndCreatePlayer(playerRequest);
+			response.setPlayer(player);
+		} catch (CustomException ce) {
+			response.setErrorInfo(getErrorInfo(ce.getMessage()));
+			if (ce.getMessage().equals("220001")) {
+				return new ResponseEntity<ResponseDTO>(response, HttpStatus.CONFLICT);
+			}
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
-			logger.debug("Exception: " + e.getMessage());
+			logger.error(e.getMessage());
 			response.setErrorInfo(getErrorInfo("110001"));
-			return new ResponseEntity<PreLoadedTaskResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<PreLoadedTaskResponse>(response, new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.CREATED);
+	}
 
+	// API to Get Random Task For a Player
+	@GetMapping("/getRandomTaskForPlayer")
+	public ResponseEntity<ResponseDTO> getRandomTaskForPlayer(@Valid @RequestParam String nickName,
+			@Valid @RequestParam String languageName) {
+
+		logger.debug("/v1/getRandomTaskForPlayer method started");
+		ResponseDTO response = new ResponseDTO();
+
+		try {
+			if (this.playerService.validatePlayerNickName(nickName)
+					&& this.languagesService.validateLanguageName(languageName)) {
+				response.setPreLoadedTasks(this.helper.randomTasksForPlayer(nickName, languageName));
+			}
+		} catch (RecordNotFoundException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.NOT_FOUND);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	// API to submit challenges
-	@PostMapping("/submitChallenges")
-	public ResponseEntity<Object> submitChallenges(@Valid @ModelAttribute RextesterRequest rextesterReq)
-			throws RecordNotFoundException, InterruptedException, IOException {
+	@PostMapping("/submitChallenge")
+	public ResponseEntity<ResponseDTO> submitChallenges(@Valid @ModelAttribute RextesterRequest rextesterReq)
+			throws InterruptedException, IOException {
 
-		logger.debug("submitChallenges method started {}", rextesterReq);
+		logger.debug("/v1/submitChallenge method started");
+		ResponseDTO response = new ResponseDTO();
 
-		Language lang = this.validator.validateLanguageMapping(rextesterReq.getLanguageChoice());
+		try {
 
-		if (lang != null) {
-			this.rextesterService.submitChallenge(rextesterReq);
-		} else {
-			return new ResponseEntity<>("Language Choice and Language Name mismatch ", new HttpHeaders(),
-					HttpStatus.BAD_REQUEST);
+			Language lang = this.languagesService.getLanguage(rextesterReq.getLanguageName());
+			Player player = this.playerService.getPlayer(rextesterReq.getNickName());
+			PreLoadedTask preLoadedTask = this.preLoadedTaskService.getPreLoadedTask(rextesterReq.getPreLoadedTaskId());
+			if (this.helper.validatePreLoadedTask(rextesterReq, preLoadedTask)) {
+				this.rextesterService.submitChallenge(rextesterReq.getProgram(), lang, player, preLoadedTask);
+			} else {
+				throw new RecordNotFoundException("No Task record Mismatch for given input");
+			}
+
+		} catch (RecordNotFoundException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.NOT_FOUND);
+		}catch (InterruptedException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.SERVICE_UNAVAILABLE);
+		} 
+		catch (IOException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.SERVICE_UNAVAILABLE);
+		} 
+		catch (Exception ex) {
+			logger.error(ex.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		return new ResponseEntity<>("!!! Thank you for participating in Challenge !!!! ", new HttpHeaders(),
-				HttpStatus.ACCEPTED);
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	private ErrorInfo getErrorInfo(String errorCode) {

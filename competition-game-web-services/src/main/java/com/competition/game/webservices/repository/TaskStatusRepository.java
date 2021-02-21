@@ -12,7 +12,7 @@ import com.competition.game.webservices.model.TaskStatus;
 @Repository
 public interface TaskStatusRepository extends JpaRepository<TaskStatus, Integer> {
 
-	@Query("FROM TaskStatus g where g.player.nickName = :nickName")
-	List<TaskStatus> findAllByNickName(@Param("nickName") String nickName);
+	@Query("FROM TaskStatus g where g.player.nickName = :nickName and g.language.name = :name ")
+	List<TaskStatus> findTasksByNickNameAndLanguageName(@Param("nickName") String nickName,@Param("name") String name);
 
 }
