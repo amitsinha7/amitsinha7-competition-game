@@ -12,7 +12,7 @@ import com.competition.game.webservices.model.TaskStatus;
 @Repository
 public interface TaskStatusRepository extends JpaRepository<TaskStatus, Integer> {
 
-	@Query(value = "SELECT DISTINCT taskstatus_id FROM taskstatus WHERE player.nickName= :nickName", nativeQuery = true)
+	@Query("FROM TaskStatus g where g.player.nickName = :nickName")
 	List<TaskStatus> findAllByNickName(@Param("nickName") String nickName);
 
 }

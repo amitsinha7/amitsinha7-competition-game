@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,7 +32,7 @@ public class Player implements Serializable {
 	@NotEmpty(message = "Player Email Id is required")
 	private String emailId;
 
-	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<TaskStatus> taskStatusList;
 
 	public String getName() {

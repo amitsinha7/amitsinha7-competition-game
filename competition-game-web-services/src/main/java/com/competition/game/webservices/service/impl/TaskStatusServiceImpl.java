@@ -17,22 +17,15 @@ public class TaskStatusServiceImpl implements TaskStatusService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	TaskStatusRepository taskRepository;
-
-	
+	TaskStatusRepository taskStatusRepository;
 
 	@Override
-	public List<Integer> getTasksAlreadyPerformed(String nickName) {
+	public List<TaskStatus> getTasksAlreadyPerformed(String nickName) {
 
-		List<TaskStatus> listOfTaskStatus;
 		logger.debug("getTasksAlreadyPerformed");
-		try {
-			listOfTaskStatus = taskRepository.findAllByNickName(nickName);
 
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return null;
+		return taskStatusRepository.findAllByNickName(nickName);
+
 	}
 
 }

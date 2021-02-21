@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,7 +18,8 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Table(name = "preLoadedTask", uniqueConstraints = { @UniqueConstraint(columnNames = { "language_number", "preLoadedTaskId" }) })
+@Table(name = "preLoadedTask", uniqueConstraints = {
+		@UniqueConstraint(columnNames = { "language_number", "preLoadedTaskId" }) })
 public class PreLoadedTask implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -31,7 +33,7 @@ public class PreLoadedTask implements Serializable {
 	@JoinColumn(name = "language_number")
 	private Language language;
 
-	@OneToMany(mappedBy = "preLoadedTask", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "preLoadedTask", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<TaskStatus> taskStatusList;
 
 	@Column(name = "Description")

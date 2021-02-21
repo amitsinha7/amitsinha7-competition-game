@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,9 @@ public class RextesterServiceImpl implements RextesterService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private final RestTemplate restTemplate;
+
+	@Value("${url.rextester}")
+	private static String url;
 
 	public RextesterServiceImpl(RestTemplateBuilder restTemplateBuilder) {
 		this.restTemplate = restTemplateBuilder.build();
@@ -55,7 +59,6 @@ public class RextesterServiceImpl implements RextesterService {
 
 			HttpEntity<LinkedMultiValueMap<String, Object>> entity = new HttpEntity<>(request,
 					this.createHttpHeaders());
-			String url = "https://rextester.com/rundotnet/api";
 			rextesterResponse = restTemplate.postForObject(url, entity, Rextester.class);
 
 			Thread.sleep(1000L);

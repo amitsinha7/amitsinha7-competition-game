@@ -6,6 +6,6 @@ import com.competition.game.webservices.model.PreLoadedTask;
 
 public interface PreLoadedTaskService {
 
-	List<PreLoadedTask> getRandomTaskForPlayer();
+	List<PreLoadedTask> getTasksForLanguageChoice(int languageChoice);
 
 }

@@ -27,6 +27,7 @@ import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.helper.Validator;
 import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.PreLoadedTask;
+import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.service.LanguageService;
 import com.competition.game.webservices.service.PlayerService;
 import com.competition.game.webservices.service.PreLoadedTaskService;
@@ -60,7 +61,8 @@ public class ChallengeController {
 
 	// Constructor for Integration Testing
 	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
-			TaskStatusService taskStatusService, PlayerService playerService, PreLoadedTaskService preLoadedTaskService) {
+			TaskStatusService taskStatusService, PlayerService playerService,
+			PreLoadedTaskService preLoadedTaskService) {
 		this.languagesService = languagesService;
 		this.rextesterService = rextesterService;
 		this.playerService = playerService;
@@ -70,15 +72,17 @@ public class ChallengeController {
 
 	// API to get All Languages
 	@GetMapping("/getRandomTaskForPlayer")
-	public ResponseEntity<PreLoadedTaskResponse> getRandomTaskForPlayer(@RequestParam String nickName)
-			throws RecordNotFoundException {
+	public ResponseEntity<PreLoadedTaskResponse> getRandomTaskForPlayer(@Valid @RequestParam String nickName,
+			@Valid @RequestParam int languageChoice) throws RecordNotFoundException {
 
 		PreLoadedTask preLoadedTask;
 		PreLoadedTaskResponse response = new PreLoadedTaskResponse();
+		List<PreLoadedTask> preLoadedTasks;
+		List<TaskStatus> tasksAlreadyPerformed;
 		try {
 			logger.debug("/v1/getRandomTaskForPlayer method started");
-			List<PreLoadedTask> preLoadedTasks = preLoadedTaskService.getRandomTaskForPlayer();
-			List<Integer> tasksAlreadyPerformed = taskStatusService.getTasksAlreadyPerformed(nickName);
+			preLoadedTasks= preLoadedTaskService.getTasksForLanguageChoice(languageChoice);
+			tasksAlreadyPerformed = taskStatusService.getTasksAlreadyPerformed(nickName);
 		} catch (Exception e) {
 			logger.debug("Exception: " + e.getMessage());
 			response.setErrorInfo(getErrorInfo("110001"));
