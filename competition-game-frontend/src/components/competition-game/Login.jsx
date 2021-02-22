@@ -35,22 +35,29 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container">
-        <h1>User Login</h1>
+      <div className="row align-items-center">
         {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
         {this.state.showSuccessMessage && <div>Login Sucessful</div>}
-        <div className="container">
-          <div className="row">
-            <div className="col">
-              User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+        <div className="col-lg-5 pl-lg-5 pb-3 py-lg-5">
+          <div className="form-group">
+            <div className="row">
+              <div className="col">
+                <label htmlFor="username-register" className="text-muted mb-1">
+                  <small>User Name</small>
+                </label>
+                <input type="text" name="username" value={this.state.username} onChange={this.handleChange} className="form-control" autoComplete="off" />
+              </div>
+              <div className="col">
+                <label htmlFor="username-register" className="text-muted mb-1">
+                  <small>Password</small>
+                </label>
+                <input type="password" name="password" value={this.state.password} onChange={this.handleChange} className="form-control" autoComplete="off" />
+              </div>
             </div>
-            <div className="col">
-              Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-            </div>
+            <button type="submit" className="py-3 mt-4 btn btn-lg btn-success btn-block" onClick={this.loginClicked}>
+              Sign in
+            </button>
           </div>
-          <button className="btn btn-success" onClick={this.loginClicked}>
-            Login
-          </button>
         </div>
       </div>
     );

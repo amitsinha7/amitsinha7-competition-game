@@ -1,9 +1,12 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 function Error() {
   return (
-    <div className="alert alert-danger" role="alert">
-      An Error Occurred. I don't know what to do! Contact support at Cognizant Challenge Team
+    <div className="text-center">
+      <h2>Whoops, we cannot find that page.</h2>
+      <p className="lead text-muted">
+        You can always visit the <Link to="/">homepage</Link> to get a fresh start.
+      </p>
     </div>
   );
 }
