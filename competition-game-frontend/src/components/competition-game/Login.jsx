@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ChallengeAPI from "../../api/ChallengeAPI";
 
-class LoginComponent extends Component {
+class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -9,7 +9,7 @@ class LoginComponent extends Component {
       username: "",
       password: "",
       hasLoginFailed: false,
-      showSuccessMessage: false,
+      showSuccessMessage: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.loginClicked = this.loginClicked.bind(this);
@@ -17,20 +17,14 @@ class LoginComponent extends Component {
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
   }
 
   loginClicked() {
-    ChallengeAPI.executeJwtChallengeAPI(
-      this.state.username,
-      this.state.password
-    )
-      .then((response) => {
-        ChallengeAPI.registerSuccessfulLoginForJwt(
-          this.state.username,
-          response.data.token
-        );
+    ChallengeAPI.executeJwtChallengeAPI(this.state.username, this.state.password)
+      .then(response => {
+        ChallengeAPI.registerSuccessfulLoginForJwt(this.state.username, response.data.token);
         this.props.history.push(`/challenge`);
       })
       .catch(() => {
@@ -43,29 +37,15 @@ class LoginComponent extends Component {
     return (
       <div className="container">
         <h1>User Login</h1>
-        {this.state.hasLoginFailed && (
-          <div className="alert alert-warning">Invalid Credentials</div>
-        )}
+        {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
         {this.state.showSuccessMessage && <div>Login Sucessful</div>}
         <div className="container">
           <div className="row">
             <div className="col">
-              User Name:{" "}
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleChange}
-              />
+              User Name: <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
             </div>
             <div className="col">
-              Password:{" "}
-              <input
-                type="password"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleChange}
-              />
+              Password: <input type="password" name="password" value={this.state.password} onChange={this.handleChange} />
             </div>
           </div>
           <button className="btn btn-success" onClick={this.loginClicked}>
@@ -77,4 +57,4 @@ class LoginComponent extends Component {
   }
 }
 
-export default LoginComponent;
+export default Login;

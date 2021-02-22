@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import ChallengeAPI from "../../api/ChallengeAPI";
 
-class HeaderComponent extends Component {
+class Header extends Component {
   render() {
     const isUserLoggedIn = ChallengeAPI.isUserLoggedIn();
     return (
@@ -12,41 +12,28 @@ class HeaderComponent extends Component {
           <ul className="navbar-nav navbar-collapse justify-content-end">
             {isUserLoggedIn && (
               <li>
-                <Link
-                  className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/challenge"
-                >
+                <Link className="btn btn-outline-success my-2 my-sm-0 navbar-brand" to="/challenge">
                   SOLVE
                 </Link>
               </li>
             )}
             {isUserLoggedIn && (
               <li>
-                <Link
-                  className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/scores"
-                >
+                <Link className="btn btn-outline-success my-2 my-sm-0 navbar-brand" to="/scores">
                   TOP 3
                 </Link>
               </li>
             )}
             {!isUserLoggedIn && (
               <li>
-                <Link
-                  className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/login"
-                >
+                <Link className="btn btn-outline-success my-2 my-sm-0 navbar-brand" to="/login">
                   Login
                 </Link>
               </li>
             )}
             {isUserLoggedIn && (
               <li>
-                <Link
-                  className="btn btn-outline-success my-2 my-sm-0 navbar-brand"
-                  to="/logout"
-                  onClick={ChallengeAPI.logout}
-                >
+                <Link className="btn btn-outline-success my-2 my-sm-0 navbar-brand" to="/logout" onClick={ChallengeAPI.logout}>
                   Logout
                 </Link>
               </li>
@@ -58,4 +45,4 @@ class HeaderComponent extends Component {
   }
 }
 
-export default HeaderComponent;
+export default Header;

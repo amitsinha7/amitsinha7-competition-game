@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class FooterComponent extends Component {
+class Footer extends Component {
   render() {
     return (
       <nav className="navbar fixed-bottom navbar-dark bg-primary">
@@ -12,4 +12,4 @@ class FooterComponent extends Component {
   }
 }
 
-export default FooterComponent;
+export default Footer;
