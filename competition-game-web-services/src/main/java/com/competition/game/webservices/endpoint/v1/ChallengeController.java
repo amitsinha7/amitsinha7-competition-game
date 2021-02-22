@@ -1,6 +1,7 @@
 package com.competition.game.webservices.endpoint.v1;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.validation.Valid;
 
@@ -61,6 +62,9 @@ public class ChallengeController {
 
 	@Autowired
 	private Helper helper;
+
+	
+	private Random randomGenerator =new Random();
 
 	// Constructor for Integration Testing
 	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
@@ -144,11 +148,13 @@ public class ChallengeController {
 
 		logger.debug("/v1/getRandomTaskForPlayer method started");
 		ResponseDTO response = new ResponseDTO();
-
+		List<PreLoadedTask> randomTasksForPlayer;
 		try {
 			if (this.playerService.validatePlayerNickName(nickName)
 					&& this.languagesService.validateLanguageName(languageName)) {
-				response.setPreLoadedTasks(this.helper.randomTasksForPlayer(nickName, languageName));
+				randomTasksForPlayer = this.helper.randomTasksForPlayer(nickName, languageName);
+				int index = randomGenerator.nextInt(randomTasksForPlayer.size());
+				response.setPreLoadedTask(this.helper.removeUnWantedData(randomTasksForPlayer.get(index)));
 			}
 		} catch (RecordNotFoundException e) {
 			logger.error(e.getMessage());

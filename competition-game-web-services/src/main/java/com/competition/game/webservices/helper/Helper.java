@@ -1,5 +1,6 @@
 package com.competition.game.webservices.helper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.competition.game.webservices.api.v1.RextesterRequest;
 import com.competition.game.webservices.api.v1.Status;
 import com.competition.game.webservices.exception.RecordNotFoundException;
+import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.PreLoadedTask;
 import com.competition.game.webservices.model.TaskStatus;
 import com.competition.game.webservices.service.PreLoadedTaskService;
@@ -111,6 +113,24 @@ public class Helper {
 				.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
 		return result.entrySet().stream().limit(3).toArray();
+
+	}
+
+	public PreLoadedTask removeUnWantedData(PreLoadedTask task) {
+
+		PreLoadedTask randomTask = new PreLoadedTask();
+
+		randomTask.setCompilerArgs(task.getCompilerArgs());
+		randomTask.setDescription(task.getDescription());
+		randomTask.setInput(task.getInput());
+		Language lang = new Language();
+		lang.setName(task.getLanguage().getName());
+		lang.setNumber(task.getLanguage().getNumber());
+		randomTask.setLanguage(lang);
+		randomTask.setOutput(task.getOutput());
+		randomTask.setPreLoadedTaskId(task.getPreLoadedTaskId());
+
+		return randomTask;
 
 	}
 
