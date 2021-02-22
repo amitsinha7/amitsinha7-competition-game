@@ -14,21 +14,22 @@ public class ResponseDTO {
 
 	private PreLoadedTask preLoadedTask;
 
-	private List<Topper> toppers;
-
-	public List<Topper> getToppers() {
-		return toppers;
-	}
-
-	public void setToppers(List<Topper> toppers) {
-		this.toppers = toppers;
-	}
+	private Object[] toppers;
 
 	private Player player;
 
 	private String message;
 
 	private List<PreLoadedTask> preLoadedTasks;
+	
+
+	public Object[] getObjects() {
+		return toppers;
+	}
+
+	public void setObjects(Object[] objects) {
+		this.toppers = objects;
+	}
 
 	public String getMessage() {
 		return message;

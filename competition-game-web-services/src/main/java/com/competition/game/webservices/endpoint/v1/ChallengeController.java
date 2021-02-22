@@ -74,6 +74,22 @@ public class ChallengeController {
 	}
 
 	// Create New Player
+	@PostMapping("/createTask")
+	public ResponseEntity<ResponseDTO> createTask(@RequestBody PreLoadedTask preLoadedTask) throws CustomException {
+
+		ResponseDTO response = new ResponseDTO();
+		try {
+			this.preLoadedTaskService.createTask(preLoadedTask);
+			response.setMessage("Created Task");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.CREATED);
+	}
+
+	// Create New Player
 	@PostMapping("/createPlayer")
 	public ResponseEntity<ResponseDTO> createPlayer(@Valid @RequestBody PlayerRequest playerRequest)
 			throws CustomException {
@@ -106,7 +122,7 @@ public class ChallengeController {
 
 		try {
 			List<TaskStatus> completedTasks = this.taskStatusService.findAllTaskStatus();
-			response.setToppers(this.helper.getTopPlayer(completedTasks));
+			response.setObjects(this.helper.getTopPlayer(completedTasks));
 		} catch (RecordNotFoundException e) {
 			logger.error(e.getMessage());
 			ErrorInfo errorInfo = new ErrorInfo();

@@ -11,4 +11,6 @@ public interface PreLoadedTaskService {
 
 	PreLoadedTask getPreLoadedTask(int preLoadedTaskId) throws RecordNotFoundException;
 
+	void createTask(PreLoadedTask preLoadedTask);
+
 }

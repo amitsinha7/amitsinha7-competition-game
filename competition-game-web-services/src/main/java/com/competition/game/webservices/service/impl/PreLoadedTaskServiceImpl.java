@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.PreLoadedTask;
@@ -44,6 +45,13 @@ public class PreLoadedTaskServiceImpl implements PreLoadedTaskService {
 			return preLoadedTask;
 		else
 			throw new RecordNotFoundException("No Task record exist for given input ...  Try Again with other task");
+	}
+
+	@Override
+	@Transactional
+	public void createTask(PreLoadedTask preLoadedTask) {
+		preLoadedTaskRepository.save(preLoadedTask);
+
 	}
 
 }

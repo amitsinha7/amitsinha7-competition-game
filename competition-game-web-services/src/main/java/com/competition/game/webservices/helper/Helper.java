@@ -1,6 +1,5 @@
 package com.competition.game.webservices.helper;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.competition.game.webservices.api.v1.RextesterRequest;
 import com.competition.game.webservices.api.v1.Status;
-import com.competition.game.webservices.api.v1.Topper;
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.PreLoadedTask;
 import com.competition.game.webservices.model.TaskStatus;
@@ -83,7 +81,7 @@ public class Helper {
 		return isValidated;
 	}
 
-	public List<Topper> getTopPlayer(List<TaskStatus> completedTasks) {
+	public Object[] getTopPlayer(List<TaskStatus> completedTasks) {
 
 		HashMap<String, Status> toppers = new HashMap<>();
 
@@ -92,6 +90,7 @@ public class Helper {
 				Status status = new Status();
 				if (task.getStatus().equals("COMPLETED")) {
 					status.setSuccessfulAttempt(1);
+					status.setSolvedTasks(1);
 				} else {
 					status.setSolvedTasks(1);
 				}
@@ -100,20 +99,18 @@ public class Helper {
 				Status status = toppers.get(task.getPlayer().getNickName());
 				if (task.getStatus().equals("COMPLETED")) {
 					status.setSuccessfulAttempt(status.getSuccessfulAttempt() + 1);
+					status.setSolvedTasks(status.getSolvedTasks() + 1);
 				} else {
 					status.setSolvedTasks(status.getSolvedTasks() + 1);
 				}
 				toppers.put(task.getPlayer().getNickName(), status);
 			}
 		});
-		
-		Map result = toppers.entrySet().stream()
-			    .sorted(Map.Entry.comparingByKey()) 			
-			    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-			    (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
-      
-		return null;
+		Map<String, Status> result = toppers.entrySet().stream().sorted(Map.Entry.comparingByKey()).collect(Collectors
+				.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+		return result.entrySet().stream().limit(3).toArray();
 
 	}
 
