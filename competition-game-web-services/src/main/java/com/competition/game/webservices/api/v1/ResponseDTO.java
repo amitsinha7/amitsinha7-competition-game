@@ -2,6 +2,7 @@ package com.competition.game.webservices.api.v1;
 
 import java.util.List;
 
+import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.Player;
 import com.competition.game.webservices.model.PreLoadedTask;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,30 +15,15 @@ public class ResponseDTO {
 
 	private PreLoadedTask preLoadedTask;
 
-	private Object[] toppers;
+	private Object[] topPlayers;
 
 	private Player player;
 
 	private String message;
 
 	private List<PreLoadedTask> preLoadedTasks;
-	
 
-	public Object[] getObjects() {
-		return toppers;
-	}
-
-	public void setObjects(Object[] objects) {
-		this.toppers = objects;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	private List<Language> Languages;
 
 	public ErrorInfo getErrorInfo() {
 		return errorInfo;
@@ -55,12 +41,12 @@ public class ResponseDTO {
 		this.preLoadedTask = preLoadedTask;
 	}
 
-	public List<PreLoadedTask> getPreLoadedTasks() {
-		return preLoadedTasks;
+	public Object[] getTopPlayers() {
+		return topPlayers;
 	}
 
-	public void setPreLoadedTasks(List<PreLoadedTask> preLoadedTasks) {
-		this.preLoadedTasks = preLoadedTasks;
+	public void setTopPlayers(Object[] topPlayers) {
+		this.topPlayers = topPlayers;
 	}
 
 	public Player getPlayer() {
@@ -69,6 +55,30 @@ public class ResponseDTO {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public List<PreLoadedTask> getPreLoadedTasks() {
+		return preLoadedTasks;
+	}
+
+	public void setPreLoadedTasks(List<PreLoadedTask> preLoadedTasks) {
+		this.preLoadedTasks = preLoadedTasks;
+	}
+
+	public List<Language> getLanguages() {
+		return Languages;
+	}
+
+	public void setLanguages(List<Language> languages) {
+		Languages = languages;
 	}
 
 }

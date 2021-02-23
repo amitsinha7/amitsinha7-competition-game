@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ChallengeAPI, { JWT_TOKEN, USER_NAME_SESSION_ATTRIBUTE_NAME } from "../../api/ChallengeAPI";
-
 class Login extends Component {
   constructor(props) {
     super(props);

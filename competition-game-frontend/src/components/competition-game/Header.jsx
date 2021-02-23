@@ -19,7 +19,7 @@ class Header extends Component {
             </Link>
           )}
           {isUserLoggedIn && (
-            <Link className="btn btn-sm btn-secondary" to="/scores">
+            <Link className="btn btn-sm btn-secondary" to="/topplayer">
               TOP 3
             </Link>
           )}

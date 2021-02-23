@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from "react";
-import ChallengeAPI from "../../api/ChallengeAPI";
-import { Button, Col, Form, FormControl, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
-
+import ChallengeAPI, { JWT_TOKEN } from "../../api/ChallengeAPI";
+import { Button, Col, Form, FormControl, InputGroup, Dropdown, DropdownButton, DropdownMenu, DropdownToggle } from "react-bootstrap";
 class Challenge extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nickName: "",
-      languageName: "",
+      languages: [],
+      selectedLanguage: "",
       description: "",
       program: "",
       preLoadedTaskId: "",
@@ -20,6 +20,24 @@ class Challenge extends Component {
     this.submitChallenge = this.submitChallenge.bind(this);
   }
 
+  componentDidMount() {
+    this.getAllLanguages();
+  }
+
+  async getAllLanguages() {
+    console.log(sessionStorage.getItem(JWT_TOKEN));
+
+    ChallengeAPI.getAllLanguagesAPI(sessionStorage.getItem(JWT_TOKEN))
+      .then(response => {
+        console.log(response.data);
+        this.setState({ languages: response.data });
+      })
+      .catch(() => {
+        this.setState({ showSuccessMessage: false });
+        this.setState({ hasLoginFailed: true });
+      });
+  }
+
   handleChange(event) {
     this.setState(
       {
@@ -30,6 +48,18 @@ class Challenge extends Component {
         console.log(this.state);
       }
     );
+  }
+
+  getRandomTaskForPlayer(languageName, nickName) {
+    ChallengeAPI.getRandomTaskForPlayer(languageName, nickName)
+      .then(response => {
+        console.log(response);
+        this.setState({ description: response.data });
+      })
+      .catch(() => {
+        this.setState({ showSuccessMessage: false });
+        this.setState({ hasSubmissionFailed: true });
+      });
   }
   submitChallenge() {
     ChallengeAPI.submitChallengeAPI(this.state.nickName, this.state.languageName, this.state.program, this.state.preLoadedTaskId, this.state.compilerArgs)
@@ -45,6 +75,8 @@ class Challenge extends Component {
   }
 
   render() {
+    console.log(this.state.languages);
+
     return (
       <div className="container">
         {this.state.hasLoginFailed && <div className="alert alert-warning">Try After Sometime</div>}
@@ -76,7 +108,7 @@ class Challenge extends Component {
               <Form.Label>TASK DESCRIPTION</Form.Label>
             </Form.Group>
             <Form.Group as={Col} md="7" controlId="validationCustom03">
-              <Form.Control type="text" name="description" value={this.state.description} onChange={this.handleChange} />
+              <Form.Control type="text" name="description" value={this.state.description} onChange={this.handleChange} placeholder="Task Description" required />
               <Form.Control.Feedback type="invalid">Please provide a valid Description.</Form.Control.Feedback>
             </Form.Group>
           </Form.Row>

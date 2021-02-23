@@ -7,6 +7,7 @@ import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 import Logout from "./Logout.jsx";
 import Challenge from "./Challenge.jsx";
+import TopPlayer from "./TopPlayer.jsx";
 
 class GameApp extends Component {
   render() {
@@ -20,6 +21,7 @@ class GameApp extends Component {
               <Route path="/login" component={Login} />
               <AuthenticatedRoute path="/logout" component={Logout} />
               <AuthenticatedRoute path="/challenge" component={Challenge} />
+              <AuthenticatedRoute path="/topplayer" component={TopPlayer} />
               <Route component={Error} />
             </Switch>
             <Footer />

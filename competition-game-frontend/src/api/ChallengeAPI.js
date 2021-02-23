@@ -16,6 +16,10 @@ class ChallengeAPI {
     return axios.get(`${API_URL}/getTopPlayer`);
   }
 
+  getAllLanguagesAPI(token) {
+    return axios.get(`${API_URL}/getAllLanguages`, { headers: { authorization: token } });
+  }
+
   getRandomTaskForPlayerAPI(username, language) {
     return axios.get(`${API_URL}/getRandomTaskForPlayer`, { params: { nickName: username, languageName: language } });
   }
@@ -45,16 +49,6 @@ class ChallengeAPI {
     let user = sessionStorage.getItem(USER_NAME_SESSION_ATTRIBUTE_NAME);
     if (user === null) return "";
     return user;
-  }
-
-  setupAxiosInterceptors() {
-    axios.interceptors.request.use(config => {
-      let token = sessionStorage.getItem(token);
-      if (this.isUserLoggedIn() && token != null) {
-        config.headers.authorization = token;
-      }
-      return config;
-    });
   }
 }
 

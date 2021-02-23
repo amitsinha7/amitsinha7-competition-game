@@ -1,5 +1,6 @@
 package com.competition.game.webservices.endpoint.v1;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -63,8 +64,7 @@ public class ChallengeController {
 	@Autowired
 	private Helper helper;
 
-	
-	private Random randomGenerator =new Random();
+	private Random randomGenerator = new Random();
 
 	// Constructor for Integration Testing
 	public ChallengeController(LanguageService languagesService, RextesterService rextesterService,
@@ -126,7 +126,7 @@ public class ChallengeController {
 
 		try {
 			List<TaskStatus> completedTasks = this.taskStatusService.findAllTaskStatus();
-			response.setObjects(this.helper.getTopPlayer(completedTasks));
+			response.setTopPlayers(this.helper.getTopPlayer(completedTasks));
 		} catch (RecordNotFoundException e) {
 			logger.error(e.getMessage());
 			ErrorInfo errorInfo = new ErrorInfo();
@@ -199,6 +199,40 @@ public class ChallengeController {
 		} catch (CustomException ce) {
 			response.setErrorInfo(getErrorInfo(ce.getMessage()));
 			return new ResponseEntity<ResponseDTO>(response, HttpStatus.BAD_GATEWAY);
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+			response.setErrorInfo(getErrorInfo("110001"));
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<ResponseDTO>(response, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	// API to Get Top Player
+	@GetMapping("/getAllLanguages")
+	public ResponseEntity<ResponseDTO> getAllLanguages() {
+
+		logger.debug("/v1/getAllLanguages method started");
+		ResponseDTO response = new ResponseDTO();
+
+		try {
+			List<Language> languages = this.languagesService.getAllLanguages();
+			List<Language> langs = new ArrayList<Language>();
+			languages.forEach(lang -> {
+				lang.setTasks(null);
+				langs.add(lang);
+			});
+			if (languages.size() > 0) {
+				response.setLanguages(languages);
+			} else {
+				throw new RecordNotFoundException("Language Unavailable");
+			}
+			response.setLanguages(langs);
+		} catch (RecordNotFoundException e) {
+			logger.error(e.getMessage());
+			ErrorInfo errorInfo = new ErrorInfo();
+			errorInfo.setErrorMessage(e.getMessage());
+			response.setErrorInfo(errorInfo);
+			return new ResponseEntity<ResponseDTO>(response, HttpStatus.NOT_FOUND);
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 			response.setErrorInfo(getErrorInfo("110001"));
