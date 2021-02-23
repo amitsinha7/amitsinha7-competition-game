@@ -6,10 +6,12 @@ class Challenge extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      nickName: "",
+      languageName: "",
       description: "",
-      challengeType: "",
-      sourceCode: "",
+      program: "",
+      preLoadedTaskId: "",
+      compilerArgs: "",
       showSuccessMessage: false,
       hasSubmissionFailed: false
     };
@@ -30,24 +32,11 @@ class Challenge extends Component {
     );
   }
   submitChallenge() {
-    ChallengeAPI.executeSubmitChallenge(this.state.name, this.state.description, this.state.challengeType, this.state.sourceCode)
+    ChallengeAPI.submitChallengeAPI(this.state.nickName, this.state.languageName, this.state.program, this.state.preLoadedTaskId, this.state.compilerArgs)
       .then(response => {
         console.log(response);
         this.setState({ showSuccessMessage: true });
         this.props.history.push(`/challenge`);
-      })
-      .catch(() => {
-        this.setState({ showSuccessMessage: false });
-        this.setState({ hasSubmissionFailed: true });
-      });
-  }
-
-  displayChallengeInForm() {
-    ChallengeAPI.executeSubmitChallenge(this.state.name, this.state.description, this.state.challengeType, this.state.sourceCode)
-      .then(response => {
-        console.log(response);
-        this.setState({ showSuccessMessage: true });
-        this.props.history.push(`/challenge/${this.state.name}`);
       })
       .catch(() => {
         this.setState({ showSuccessMessage: false });
@@ -66,38 +55,37 @@ class Challenge extends Component {
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} md="2" controlId="validationCustom02">
-              <Form.Label>NAME</Form.Label>
+              <Form.Label>NICK NAME</Form.Label>
             </Form.Group>
             <Form.Group as={Col} md="7" controlId="validationCustom03">
-              <Form.Control type="text" name="name" value={this.state.name} onChange={this.handleChange} placeholder="Name" required />
+              <Form.Control type="text" name="nickName" value={this.state.nickName} onChange={this.handleChange} placeholder="Nick Name " required />
               <Form.Control.Feedback type="invalid">Please provide a valid name.</Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} md="2" controlId="validationCustom02">
-              <Form.Label>SELECT TASK</Form.Label>
+              <Form.Label>SELECT LANGUAGE</Form.Label>
             </Form.Group>
             <Form.Group as={Col} md="7" controlId="validationCustom03">
-              <Form.Control type="text" name="challengeType" value={this.state.challengeType} onChange={this.handleChange} placeholder="SELECT TASK" required />
+              <Form.Control type="text" name="languageName" value={this.state.languageName} onChange={this.handleChange} placeholder="Programming Language" required />
               <Form.Control.Feedback type="invalid">Please provide a valid SELECT TASK.</Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} md="2" controlId="validationCustom02">
-              <Form.Label>DESCRIPTION</Form.Label>
+              <Form.Label>TASK DESCRIPTION</Form.Label>
             </Form.Group>
             <Form.Group as={Col} md="7" controlId="validationCustom03">
-              <Form.Control type="text" name="description" value={this.state.description} onChange={this.handleChange} placeholder="Description" required />
+              <Form.Control type="text" name="description" value={this.state.description} onChange={this.handleChange} />
               <Form.Control.Feedback type="invalid">Please provide a valid Description.</Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
-
           <Form.Row>
             <Form.Group as={Col} md="2" controlId="validationCustom02">
               <Form.Label>SOLUTION CODE</Form.Label>
             </Form.Group>
-            <Form.Group controlId="exampleForm.SelectCustom1">
-              <FormControl as="textarea" aria-label="With textarea" name="sourceCode" value={this.state.sourceCode} onChange={this.handleChange} />
+            <Form.Group as={Col} controlId="exampleForm.SelectCustom1">
+              <FormControl as="textarea" aria-label="With textarea" rows={8} name="program" value={this.state.program} onChange={this.handleChange} />
             </Form.Group>
           </Form.Row>
           <Button type="submit">Submit</Button>

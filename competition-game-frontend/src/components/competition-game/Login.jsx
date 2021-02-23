@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ChallengeAPI from "../../api/ChallengeAPI";
+import ChallengeAPI, { JWT_TOKEN, USER_NAME_SESSION_ATTRIBUTE_NAME } from "../../api/ChallengeAPI";
 
 class Login extends Component {
   constructor(props) {
@@ -22,9 +22,10 @@ class Login extends Component {
   }
 
   loginClicked() {
-    ChallengeAPI.executeJwtChallengeAPI(this.state.username, this.state.password)
+    ChallengeAPI.authenticateAPI(this.state.username, this.state.password)
       .then(response => {
-        ChallengeAPI.registerSuccessfulLoginForJwt(this.state.username, response.data.token);
+        sessionStorage.setItem(USER_NAME_SESSION_ATTRIBUTE_NAME, this.state.username);
+        sessionStorage.setItem(JWT_TOKEN, "Bearer " + response.data.token);
         this.props.history.push(`/challenge`);
       })
       .catch(() => {
