@@ -10,8 +10,8 @@
 
 # production
 /build
-/src/components/todo
 
+package-lock.json
 
 # misc
 .DS_Store
