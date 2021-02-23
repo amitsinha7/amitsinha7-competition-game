@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.competition.game.webservices.api.v1.RextesterRequest;
 import com.competition.game.webservices.api.v1.Status;
+import com.competition.game.webservices.api.v1.TopPlayer;
 import com.competition.game.webservices.exception.RecordNotFoundException;
 import com.competition.game.webservices.model.Language;
 import com.competition.game.webservices.model.PreLoadedTask;
@@ -83,7 +84,7 @@ public class Helper {
 		return isValidated;
 	}
 
-	public Object[] getTopPlayer(List<TaskStatus> completedTasks) {
+	public List<TopPlayer> getTopPlayer(List<TaskStatus> completedTasks) {
 
 		HashMap<String, Status> toppers = new HashMap<>();
 
@@ -111,8 +112,17 @@ public class Helper {
 
 		Map<String, Status> result = toppers.entrySet().stream().sorted(Map.Entry.comparingByKey()).collect(Collectors
 				.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+		List<TopPlayer> topPlayer = new ArrayList<>();		
+		result.entrySet().stream().limit(3).forEach((entry) -> {
+			TopPlayer player = new TopPlayer();
+			player.setName((String) entry.getKey());
+			player.setStatus((Status) entry.getValue());
+			topPlayer.add(player);
+		});
+		
+		
 
-		return result.entrySet().stream().limit(3).toArray();
+		return  topPlayer;
 
 	}
 

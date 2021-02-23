@@ -15,7 +15,7 @@ public class ResponseDTO {
 
 	private PreLoadedTask preLoadedTask;
 
-	private Object[] topPlayers;
+	private List<TopPlayer> topPlayers;
 
 	private Player player;
 
@@ -37,16 +37,16 @@ public class ResponseDTO {
 		return preLoadedTask;
 	}
 
-	public void setPreLoadedTask(PreLoadedTask preLoadedTask) {
-		this.preLoadedTask = preLoadedTask;
-	}
-
-	public Object[] getTopPlayers() {
+	public List<TopPlayer> getTopPlayers() {
 		return topPlayers;
 	}
 
-	public void setTopPlayers(Object[] topPlayers) {
+	public void setTopPlayers(List<TopPlayer> topPlayers) {
 		this.topPlayers = topPlayers;
+	}
+
+	public void setPreLoadedTask(PreLoadedTask preLoadedTask) {
+		this.preLoadedTask = preLoadedTask;
 	}
 
 	public Player getPlayer() {

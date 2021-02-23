@@ -433,6 +433,12 @@ textarea.tall-textarea {
   font-size: 0.75rem;
 }
 
+.footer-align {
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+}
+
 .floating-alert {
   display: none;
   position: absolute;
